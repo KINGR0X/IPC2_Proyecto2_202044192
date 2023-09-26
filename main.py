@@ -58,6 +58,7 @@ for drones in raiz.findall('listaDrones'):
                             # Creación del objeto dron
                             # de momento se guarda para luego añadirlo al tener las alturas
                             nombre_dron = dron(str(nuevo_dron_contenido))
+                            # print(nombre_dron.nombre)
 
                             for alturas in contenido_sistema.findall('alturas'):
 
@@ -69,11 +70,11 @@ for drones in raiz.findall('listaDrones'):
                                     lista_altura_temporal.insertar_dato(
                                         altura(valor_altura, letra_altura))
 
-                                    # Se insertan los datos en la lista de contenido
-                                    lista_contenido_temporal.insertar_dato(
-                                        contenido(nombre_dron, lista_altura_temporal))
+                                # Se insertan los datos en la lista de contenido
+                                lista_contenido_temporal.insertar_dato(
+                                    contenido(nombre_dron, lista_altura_temporal))
 
-                                    # Se agregan las listas a la lista de sistema_drones
+                                # Se agregan las listas a la lista de sistema_drones
             lista_sistema_temporal.insertar_dato(sistema_drones(
                 nombre_SistemaDron, altura_maxima, cantidad_drones, lista_drones_temporal, lista_contenido_temporal))
 

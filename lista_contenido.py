@@ -28,6 +28,6 @@ class lista_contenido:
         while actual != None:
             print("Dron:", actual.contenido.dron.nombre)
 
-            actual.contenido.lista_alturas.recorrer_e_imprimir_lista()
+            # actual.contenido.lista_alturas.recorrer_e_imprimir_lista()
             actual = actual.siguiente
         print("============================================================")
