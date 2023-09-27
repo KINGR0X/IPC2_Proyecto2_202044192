@@ -1,4 +1,5 @@
 from nodo_contenido import nodo_contenido
+from sistema_drones import sistema_drones
 import sys
 import os
 
@@ -50,8 +51,23 @@ fontname="Helvetica,Arial,sans-serif"
 node [fontname="Helvetica,Arial,sans-serif"]
 edge [fontname="Helvetica,Arial,sans-serif"]
 a0 [shape=none label=<
-<TABLE border="10" cellspacing="10" cellpadding="10" style="rounded" bgcolor="blue:red" gradientangle="315">
+<TABLE border="10" cellspacing="10" cellpadding="10" style="rounded" bgcolor="#088395" gradientangle="315">
             """
+
+        # Primero se deben de graficar las alturas tomando en cuenta la altura maxima
+        contador = int(alturaMax)+1
+        actual = self.primero
+        # for que use el contador
+        for i in range(contador):
+            if i == 0:
+                text += """<TR>"""
+                text += """<TD border="3"  bgcolor="gold" gradientangle="315">""" + \
+                    str("Alturas")+"""</TD>\n"""
+            else:
+                text += """<TD border="3"  bgcolor="gold" gradientangle="315">""" + \
+                    str(i)+"""</TD>\n"""
+
+        text += """</TR>"""
 
         actual = self.primero
         # iniciaria en 1, verifica si se cambio de linea
@@ -72,14 +88,14 @@ a0 [shape=none label=<
                 fila_iniciada = True
                 # Abrimos la fila
                 text += """<TR>"""
-                text += """<TD border="3"  bgcolor="yellow" gradientangle="315">""" + \
+                text += """<TD border="3"  bgcolor="orangered" gradientangle="315">""" + \
                     str(actual.contenido.dron.nombre)+"""</TD>\n"""
 
                 # Lista de alturas
                 actualL = actual.contenido.lista_altura.primero
                 while actualL != None:
 
-                    text += """<TD border="3"  bgcolor="yellow" gradientangle="315">""" + \
+                    text += """<TD border="3"  bgcolor="orangered" gradientangle="315">""" + \
                         str(actualL.altura.letra) + \
                         """</TD>\n"""
 
@@ -87,7 +103,7 @@ a0 [shape=none label=<
 
             # Si no se da ninguno de los csos anteriores entonces secagrega una contenido con el TD
             else:
-                text += """<TD border="3"  bgcolor="yellow" gradientangle="315">""" + \
+                text += """<TD border="3"  bgcolor="orangered" gradientangle="315">""" + \
                     str(actual.contenido.dron.nombre)+"""</TD>\n"""
 
             actual = actual.siguiente

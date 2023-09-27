@@ -38,6 +38,8 @@ class lista_sistema_drones:
         print("")
 
     def graficar_mi_lista_original(self, nombre_signal):
+
+        # Grafica del contenido
         actual = self.primero
         while actual != None:
             if actual.sistema_drones.nombre == nombre_signal:
