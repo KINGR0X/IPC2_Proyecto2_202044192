@@ -28,6 +28,73 @@ class lista_contenido:
         while actual != None:
             print("Dron:", actual.contenido.dron.nombre)
 
-            # actual.contenido.lista_alturas.recorrer_e_imprimir_lista()
+            actual.contenido.lista_altura.recorrer_e_imprimir_lista()
             actual = actual.siguiente
         print("============================================================")
+
+    def graficar(self, nombre_sistema, alturaMax, cantidad_drones):
+        # f = open('bb.dot', 'w')
+        # variable que conmtiene la configuración del grafo
+        # se crea el subgrafo primero
+        text = """
+digraph G {
+subgraph {
+nodo_00[label=" """+nombre_sistema+""" ",fontcolor="#000000",fillcolor=gold, style=filled,shape=box];
+nodo_01_left[label="Altura maxima\\n"""+alturaMax+"""",fontcolor="#000000",fillcolor=gold, style=filled,shape=box];
+nodo_00 -> nodo_01_left;
+nodo_01_right[label="Cantidad drones\\n"""+cantidad_drones+"""",fontcolor="#000000",fillcolor=gold, style=filled,shape=box];
+nodo_00 -> nodo_01_right;
+}
+
+fontname="Helvetica,Arial,sans-serif"
+node [fontname="Helvetica,Arial,sans-serif"]
+edge [fontname="Helvetica,Arial,sans-serif"]
+a0 [shape=none label=<
+<TABLE border="10" cellspacing="10" cellpadding="10" style="rounded" bgcolor="blue:red" gradientangle="315">
+            """
+
+        actual = self.primero
+        # iniciaria en 1, verifica si se cambio de linea
+        sentinela_de_filas = actual.contenido.dron.nombre
+        fila_iniciada = False  # para saber si se inicio una nueva fila
+
+        while actual != None:
+            # Si el dron actual es diferente al que viene, ej: DronX y el siguiente es DronY
+            if sentinela_de_filas != actual.contenido.dron.nombre:
+                sentinela_de_filas = actual.contenido.dron.nombre
+                # aun no se inicia una nueva fila por lo que es False
+                fila_iniciada = False
+                # Cerramos la fila
+                text += """</TR>\n"""
+
+            # si la fila iniciada es False es porque se acaba de cerrar una fila, entonces inicializamos la nueva fila
+            if fila_iniciada == False:
+                fila_iniciada = True
+                # Abrimos la fila
+                text += """<TR>"""
+                text += """<TD border="3"  bgcolor="yellow" gradientangle="315">""" + \
+                    str(actual.contenido.dron.nombre)+"""</TD>\n"""
+
+                # Lista de alturas
+                actualL = actual.contenido.lista_altura.primero
+                while actualL != None:
+
+                    text += """<TD border="3"  bgcolor="yellow" gradientangle="315">""" + \
+                        str(actualL.altura.letra) + \
+                        """</TD>\n"""
+
+                    actualL = actualL.siguiente
+
+            # Si no se da ninguno de los csos anteriores entonces secagrega una contenido con el TD
+            else:
+                text += """<TD border="3"  bgcolor="yellow" gradientangle="315">""" + \
+                    str(actual.contenido.dron.nombre)+"""</TD>\n"""
+
+            actual = actual.siguiente
+
+        # al fiunalizar el while se cierra la tablas
+        text += """
+</TR></TABLE>>];
+}
+"""
+        return text

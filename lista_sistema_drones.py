@@ -21,7 +21,8 @@ class lista_sistema_drones:
         print("")
         print("Total de sistema de drones almacenados:",
               self.contador_sistemas_drones)
-        print("******************************************************************")
+        print("")
+        print("============================================================")
         actual = self.primero
         while actual != None:
             print("Nombre:", actual.sistema_drones.nombre, "Altura maxima:",
@@ -31,25 +32,19 @@ class lista_sistema_drones:
             actual.sistema_drones.lista_contenido.recorrer_e_imprimir_lista()
             actual = actual.siguiente
             print("")
-        print("******************************************************************")
+        print("============================================================")
         print("")
         print("")
         print("")
 
-    # def grafica_mi_lista_original(self):
-    #     actual = self.primero
-    #     while actual != None:
-    #         actual.sistema_drones.lista_celdas.generar_grafica(actual.sistema_drones.nombre,
-    #                                                    str(actual.sistema_drones.niveles),
-    #                                                    str(actual.sistema_drones.celdas_por_nivel))
-    #         # actual.sistema_drones.lista_patrones_celdas.recorrer_e_imprimir_lista()
-    #         actual = actual.siguiente
-
-    # def grafica_mi_lista_de_patrones(self):
-    #     actual = self.primero
-    #     while actual != None:
-    #         actual.sistema_drones.lista_patrones_celdas.generar_grafica(actual.sistema_drones.nombre,
-    #                                                             str(actual.sistema_drones.niveles),
-    #                                                             str(actual.sistema_drones.celdas_por_nivel))
-    #         # actual.sistema_drones.lista_patrones_celdas.recorrer_e_imprimir_lista()
-    #         actual = actual.siguiente
+    def graficar_mi_lista_original(self, nombre_signal):
+        actual = self.primero
+        while actual != None:
+            if actual.sistema_drones.nombre == nombre_signal:
+                dot = actual.sistema_drones.lista_contenido.graficar(actual.sistema_drones.nombre,
+                                                                     str(
+                                                                         actual.sistema_drones.alturaMaxima),
+                                                                     str(actual.sistema_drones.cantidadDrones))
+            # actual.sistema_drones.lista_patrones_celdas.recorrer_e_imprimir_lista()
+                return dot
+            actual = actual.siguiente

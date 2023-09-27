@@ -23,7 +23,8 @@ class lista_drones:
         self.contador_celdas += 1
 
     def recorrer_e_imprimir_lista(self):
-        print("============================================================")
+        print()
+        print("======================= Lista drones =======================")
         actual = self.primero
         while actual != None:
             print("Dron:", actual.dron.nombre)

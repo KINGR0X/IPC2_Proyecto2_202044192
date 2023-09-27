@@ -1,5 +1,5 @@
 class contenido:
-    def __init__(self, dron, lista_alturas):
+    def __init__(self, dron, lista_altura):
         self.dron = dron
 
-        self.lista_alturas = lista_alturas
+        self.lista_altura = lista_altura
