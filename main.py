@@ -87,7 +87,7 @@ def cargar_archivo():
                     nombre_SistemaDron, altura_maxima, cantidad_drones, lista_contenido_temporal))
 
     # lista_sistema_temporal.recorrer_e_imprimir_lista()
-    return lista_sistema_temporal
+    return lista_sistema_temporal, lista_drones_temporal
 
 
 def imprimir_nombres_sistemas_drones(lista_sistema_temporal):
@@ -122,6 +122,21 @@ def generar_grafica_original(nombreSignal, lista_sistema_temporal, direccion_gra
     os.system("""dot -Tpng """+nombre+""" -o """+nombreOriginal+""".png""")
 
 
+def imprimir_nombres_lista_drones(lista_drones_temporal):
+    # variable para guardar los nombres de los sistemas de drones
+    listaDrones = "Listado de drones \n"
+
+    # === Imprimir las señales que hay en el archivo ===
+    actual = lista_drones_temporal.primero
+    while actual != None:
+        listaDrones += actual.dron.nombre
+        listaDrones += "\n"
+
+        actual = actual.siguiente
+
+    return listaDrones
+
+
 # def agregar_nuevo_dron():
 
 #     # Se le piden al usuario los datos del dron
@@ -146,7 +161,3 @@ def generar_grafica_original(nombreSignal, lista_sistema_temporal, direccion_gra
 
 
 # agregar_nuevo_dron()
-
-
-# lista_drones_temporal.recorrer_e_imprimir_lista()
-# lista_sistema_temporal.recorrer_e_imprimir_lista()

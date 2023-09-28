@@ -9,8 +9,9 @@ from tkinter import messagebox
 from tkinter import scrolledtext
 from tkinter.filedialog import asksaveasfilename
 import os
-from main import cargar_archivo, imprimir_nombres_sistemas_drones, generar_grafica_original
+from main import cargar_archivo, imprimir_nombres_sistemas_drones, generar_grafica_original, imprimir_nombres_lista_drones
 from sistema_drones import sistema_drones
+from lista_drones import lista_drones
 
 
 class Pantalla_principal():
@@ -36,7 +37,9 @@ class Pantalla_principal():
         self.text = ''
         posicionx1 = 480
         self.analizado = False
+        self.botonGraficaContenido = False
         self.lista = sistema_drones
+        self.lista_drones = lista_drones
 
         # encabezado de cuadro de texto de entrada
         Label(self.Frame, text="Sistema de drones", font=(
@@ -50,7 +53,7 @@ class Pantalla_principal():
         analizarMenu = Menu(self.menubar, tearoff=0)
 
         analizarMenu .add_command(
-            label="Inicilización", command=self.analizar, font=("Roboto Mono", 13))
+            label="Inicilización", command=self.inicializar, font=("Roboto Mono", 13))
 
         self.menubar.add_cascade(
             label="Inicilización", menu=analizarMenu, font=("Roboto Mono", 13))
@@ -68,7 +71,7 @@ class Pantalla_principal():
         analizarMenu = Menu(self.menubar, tearoff=0)
 
         analizarMenu .add_command(
-            label="Generar XML", command=self.analizar, font=("Roboto Mono", 13))
+            label="Generar XML", command=self.ver_listado_de_drones, font=("Roboto Mono", 13))
 
         self.menubar.add_cascade(
             label="Generar XML", menu=analizarMenu, font=("Roboto Mono", 13))
@@ -77,9 +80,9 @@ class Pantalla_principal():
         archivoMenu = Menu(self.menubar, tearoff=0)
 
         archivoMenu .add_command(
-            label="Ver listado de drones", command=self.analizar, font=("Roboto Mono", 13))
+            label="Ver listado de drones", command=self.ver_listado_de_drones, font=("Roboto Mono", 13))
         archivoMenu .add_command(
-            label="Agregar nuevo dron", command=self.cargarArchivo, font=("Roboto Mono", 13))
+            label="Agregar nuevo dron", command=self.agregar_nuevo_dron, font=("Roboto Mono", 13))
 
         self.menubar.add_cascade(
             label="Gestión de drones", menu=archivoMenu, font=("Roboto Mono", 13))
@@ -98,7 +101,7 @@ class Pantalla_principal():
         archivoMenu = Menu(self.menubar, tearoff=0)
 
         archivoMenu .add_command(
-            label="Listado de mensajes", command=self.analizar, font=("Roboto Mono", 13))
+            label="Listado de mensajes", command=self.ver_listado_de_drones, font=("Roboto Mono", 13))
         archivoMenu .add_command(
             label="Instrucciones para enviar un mensaje", command=self.cargarArchivo, font=("Roboto Mono", 13))
 
@@ -109,7 +112,7 @@ class Pantalla_principal():
         analizarMenu = Menu(self.menubar, tearoff=0)
 
         analizarMenu .add_command(
-            label="Ayuda", command=self.analizar, font=("Roboto Mono", 13))
+            label="Ayuda", command=self.ver_listado_de_drones, font=("Roboto Mono", 13))
 
         self.menubar.add_cascade(
             label="Ayuda", menu=analizarMenu, font=("Roboto Mono", 13))
@@ -123,16 +126,16 @@ class Pantalla_principal():
         self.ingresoDato = StringVar()
 
         self.ingresoDato_entry = Entry(
-            textvariable=self.ingresoDato, width=24, font=("Times New Roman", 14))
+            textvariable=self.ingresoDato, width=39, font=("Times New Roman", 14))
 
         # posicionamiento del cuadro de entrada
-        self.ingresoDato_entry.place(x=30, y=200)
+        self.ingresoDato_entry.place(x=30, y=192)
 
         # Botón para guardar el texto que ingreso el usuario
         self.botonGuardar = Button(
             self.pp, text="Guardar", command=self.guardar_dato, width="10", height="3", bg="white")
 
-        self.botonGuardar.place(x=105, y=230)
+        self.botonGuardar.place(x=170, y=228)
 
         # cuadro de texto
         self.textContainer = Frame(self.pp, borderwidth=1, relief="sunken")
@@ -159,47 +162,67 @@ class Pantalla_principal():
         # Actualizacion del Frame
         self.Frame.mainloop()
 
-    def guardar_dato(self):
+    def inicializar(self):
+
         try:
-            numero_signal = self.ingresoDato.get().strip()
-
-            # Luego de guardar el dato se grafica
-
-            # === convertir el numero seleccionado a el nombre de la señal ===
-            actual = self.lista.primero
-            contadorAux = 0
-            signal_a_graficar = ""
-            while actual != None:
-                contadorAux += 1
-                if numero_signal == str(contadorAux):
-                    signal_a_graficar = actual.sistema_drones.nombre
-                    # lista_sistema_temporal.calcular_los_patrones(str(actual.sistema_drones.nombre))
-                actual = actual.siguiente
-
-            print(signal_a_graficar)
-
-            # El usuario selecciona donde guardar la grafica
-            direccion_grafica = filedialog.asksaveasfilename(
-                filetypes=[("Archivos de texto", "*.dot"),
-                           ("Todos los archivos", "*.*")],
-                title="Guardar archivo como", initialfile="Matriz")
-
-            generar_grafica_original(
-                signal_a_graficar, self.lista, direccion_grafica)
+            self.analizado = False
+            self.botonGraficaContenido = False
 
             messagebox.showinfo(
-                "Grafica", "Grafica generada con exito")
+                "Inicialización", "Sistema inicializado con exito")
 
         except:
             messagebox.showerror(
-                "Error", "No se ha seleccionado ningún archivo")
+                "Error", "No se ha podido inicializar el sistema de drones")
+            return
+
+    def guardar_dato(self):
+
+        if self.botonGraficaContenido == True:
+
+            try:
+                numero_signal = self.ingresoDato.get().strip()
+
+                # Luego de guardar el dato se grafica
+
+                # === convertir el numero seleccionado a el nombre de la señal ===
+                actual = self.lista.primero
+                contadorAux = 0
+                signal_a_graficar = ""
+                while actual != None:
+                    contadorAux += 1
+                    if numero_signal == str(contadorAux):
+                        signal_a_graficar = actual.sistema_drones.nombre
+                        # lista_sistema_temporal.calcular_los_patrones(str(actual.sistema_drones.nombre))
+                    actual = actual.siguiente
+
+                # El usuario selecciona donde guardar la grafica
+                direccion_grafica = filedialog.asksaveasfilename(
+                    filetypes=[("Archivos de texto", "*.dot"),
+                               ("Todos los archivos", "*.*")],
+                    title="Guardar archivo como", initialfile="Matriz")
+
+                generar_grafica_original(
+                    signal_a_graficar, self.lista, direccion_grafica)
+
+                messagebox.showinfo(
+                    "Grafica", "Grafica generada con exito")
+
+            except:
+                messagebox.showerror(
+                    "Error", "No se ha seleccionado ningún archivo")
+                return
+
+        else:
+            messagebox.showerror(
+                "Error", "No se ha presionado el boton de graficar sistema de datos")
             return
 
     def cargarArchivo(self):
 
         try:
-            self.lista = cargar_archivo()
-            self.analizado = False
+            self.lista, self.lista_drones = cargar_archivo()
+            self.analizado = True
 
         except:
             messagebox.showerror(
@@ -208,203 +231,55 @@ class Pantalla_principal():
 
     def graficar(self):
 
-        try:
-            # Elimina contenido del cuadro
-            self.text.delete(1.0, "end")
+        if self.analizado == True:
 
-            n = imprimir_nombres_sistemas_drones(self.lista)
+            try:
+                # Elimina contenido del cuadro
+                self.text.delete(1.0, "end")
 
-            # set contenido
-            self.text.insert(1.0, n)
+                n = imprimir_nombres_sistemas_drones(self.lista)
 
-        except:
+                # set contenido
+                self.text.insert(1.0, n)
+                self.botonGraficaContenido = True
+
+            except:
+                messagebox.showerror(
+                    "Error", "No se ha podido generar la grafica")
+                return
+
+        else:
+
             messagebox.showerror(
-                "Error", "No se ha podido generar la grafica")
+                "Error", "No se ha cargado ningun archivo")
             return
 
-    def guardar(self):
-        try:
-            # Tomar datos que esta en el cuadro de texto
-            self.texto = self.text.get(1.0, "end")
+    def ver_listado_de_drones(self):
 
-            archivo = open(self.archivo_seleccionado, 'w', encoding="utf-8")
-            archivo.write(self.texto)
+        if self.analizado == True:
 
-            # mensaje de guardado
-            messagebox.showinfo("Guardado", "Archivo guardado con exito")
+            try:
+                # Elimina contenido del cuadro
+                self.text.delete(1.0, "end")
 
-        except:
+                n = imprimir_nombres_lista_drones(self.lista_drones)
+
+                # set contenido
+                self.text.insert(1.0, n)
+
+            except:
+                messagebox.showerror(
+                    "Error", "No se ha podido mostrar la lista de drones")
+                return
+
+        else:
+
             messagebox.showerror(
-                "Error", "No se ha seleccionado ningún archivo")
+                "Error", "No se ha cargado ningun archivo")
             return
 
-    def guardarComo(self):
-        try:
-            # Tomar datos que esta en el cuadro de texto
-            self.texto = self.text.get(1.0, "end")
-
-            self.extensions = [("Archivos txt", f".txt"),
-                               ("Archivos lfp", f".lfp"), ("All files", "*")]
-
-            self.archivo_seleccionado = filename = asksaveasfilename(
-                title="Seleccione un archivo", filetypes=[("Archivos txt", f".txt"), ("Archivos lfp", f".lfp"), ("All files", "*")], defaultextension=self.extensions, initialfile="Documento")
-
-            archivo = open(self.archivo_seleccionado, 'w', encoding="utf-8")
-            archivo.write(self.texto)
-
-            # mensaje de guardado
-            messagebox.showinfo("Guardado", "Archivo guardado con exito")
-
-        except:
-            messagebox.showerror(
-                "Error", "No se ha seleccionado ningún archivo")
-            return
-
-    def getErrores(self):
-        # Solo generamos los errores si ya se ha presionado el boton de analizar, porque si se presiona guardar sin analizar no se generan errores
-        if (self.analizado == False):
-            messagebox.showerror(
-                "Error", "Para generar el archivo de errores primero debe de analizar el archivo")
-            return
-        # try:
-        #     CrearArchivoErrores()
-        #     # mensaje de guardado
-        #     messagebox.showinfo(
-        #         "Guardado", "Archivo de errores generado con exito")
-        # except:
-        #     messagebox.showerror(
-        #         "Error", "No se ha podido generar el archivo de errores")
-        #     return
-
-    def analizar(self):
-        # variable para saber si ya se presiono el boton de analizar
-        self.analizado = True
-        # En caso de que despues de analizar un arhivo se analice otro se limpian las listas
-        # limpiarListaErrores()
-        # limpiarLista()
-
-        try:
-            messagebox.showerror("Analisis completado", "Analisis completado")
-            # limpiarListas()
-
-            # instruccion(self.texto)
-            # asignarToken()
-            # analizador_sintactico(lista_lexemas)
-
-            # # print(len(lista_errores))
-
-            # if len(lista_errores) == 0:
-
-            #     necesarioparaMongo(lista_lexemas)
-            #     transformarMongo()
-            #     # set contenido
-            #     messagebox.showinfo("Analisis completado",
-            #                         "Analisis completado, No se encontraron errores")
-
-            #     # Elimina contenido del cuadro
-            #     self.text2.delete(1.0, "end")
-
-            #     # set contenido
-            #     self.text2.insert(1.0, armarInstrucciones())
-
-            #     generarArchivo(str(self.filename))
-
-            # else:
-
-            #     messagebox.showerror("Analisis completado",
-            #                          "Analisis completado, Se encontraron algunos errores")
-
-            #     # Elimina contenido del cuadro
-            #     self.text2.delete(1.0, "end")
-
-            #     # set contenido
-            #     self.text2.insert(
-            #         1.0, "Corrija los errores para poder traducir los comandos a MongoDB")
-
-        except:
-            messagebox.showerror(
-                "Error", "No se ha seleccionado ningún archivo")
-            return
-
-    def tokens(self):
-
-        ventana = Tk()
-        ventana.title("Tokens | Proyecto 2")
-        self.centrar(ventana, 800, 320)
-        ventana.geometry("800x320")
-        ventana.configure(bg="#343541")
-
-        tv = ttk.Treeview(ventana, columns=("col1", "col2", "col3"))
-
-        tv.column("#0", width=100, anchor=CENTER)
-        tv.column("#1", width=200, anchor=CENTER)
-        tv.column("#2", width=200, anchor=CENTER)
-        tv.column("#3", width=200, anchor=CENTER)
-
-        tv.heading("#0", text="No.", anchor=CENTER)
-        tv.heading("#1", text="Token", anchor=CENTER)
-        tv.heading("#2", text="No.Token", anchor=CENTER)
-        tv.heading("#3", text="Lexema", anchor=CENTER)
-
-        # Estilos de la tabla
-        style = ttk.Style(tv)
-        style.theme_use("clam")
-
-        style.configure("Treeview", background="white",
-                        fieldbackground="white", foreground="black", font=['Times New Roman', 14, 'normal'])
-
-        style.configure('Treeview.Heading', background="orange", font=[
-                        'Times New Roman', 14, 'normal'])
-
-        # for i in range(len(lista_lexemas)):
-        #     tv.insert("", END, text=i, values=(
-        #         lista_lexemas[i].getToken(), i, lista_lexemas[i].operar(None)))
-
-        tv.pack()
-
-        ventana.mainloop()
-
-    def errores(self):
-
-        ventana = Tk()
-        ventana.title("Tokens | Proyecto 2")
-        self.centrar(ventana, 1100, 320)
-        ventana.geometry("1100x320")
-        ventana.configure(bg="#343541")
-
-        tv = ttk.Treeview(ventana, columns=("col1", "col2", "col3", "col4"))
-
-        tv.column("#0", width=150, anchor=CENTER)
-        tv.column("#1", width=100, anchor=CENTER)
-        tv.column("#2", width=100, anchor=CENTER)
-        tv.column("#3", width=250, anchor=CENTER)
-        tv.column("#4", width=500, anchor=CENTER)
-
-        tv.heading("#0", text="Tipo", anchor=CENTER)
-        tv.heading("#1", text="Fila", anchor=CENTER)
-        tv.heading("#2", text="Columna", anchor=CENTER)
-        tv.heading("#3", text="Token o Lexema", anchor=CENTER)
-        tv.heading("#4", text="Descripcion", anchor=CENTER)
-
-        # Estilos de la tabla
-        style = ttk.Style(tv)
-        style.theme_use("clam")
-
-        style.configure("Treeview", background="white",
-                        fieldbackground="white", foreground="black", font=['Times New Roman', 14, 'normal'])
-
-        style.configure('Treeview.Heading', background="orange", font=[
-                        'Times New Roman', 14, 'normal'])
-
-        # for i in range(len(lista_errores)):
-        #     tipo, fila, columna, lex, desc = lista_errores[i].operar(None)
-
-        # tv.insert("", END, text=tipo, values=(
-        #     fila, columna, lex, desc))
-
-        tv.pack()
-
-        ventana.mainloop()
+    def agregar_nuevo_dron(self):
+        pass
 
 
 # mostrar pantalla
