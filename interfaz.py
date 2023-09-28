@@ -12,6 +12,7 @@ import os
 from main import cargar_archivo, imprimir_nombres_sistemas_drones, generar_grafica_original, imprimir_nombres_lista_drones
 from sistema_drones import sistema_drones
 from lista_drones import lista_drones
+from dron import dron
 
 
 class Pantalla_principal():
@@ -38,6 +39,7 @@ class Pantalla_principal():
         posicionx1 = 480
         self.analizado = False
         self.botonGraficaContenido = False
+        self.botonNuevoDron = False
         self.lista = sistema_drones
         self.lista_drones = lista_drones
 
@@ -167,9 +169,13 @@ class Pantalla_principal():
         try:
             self.analizado = False
             self.botonGraficaContenido = False
+            self.botonNuevoDron = False
 
             messagebox.showinfo(
                 "Inicialización", "Sistema inicializado con exito")
+
+            # Elimina contenido del cuadro
+            self.text.delete(1.0, "end")
 
         except:
             messagebox.showerror(
@@ -205,6 +211,8 @@ class Pantalla_principal():
                 generar_grafica_original(
                     signal_a_graficar, self.lista, direccion_grafica)
 
+                self.botonGraficaContenido = False
+
                 messagebox.showinfo(
                     "Grafica", "Grafica generada con exito")
 
@@ -213,9 +221,40 @@ class Pantalla_principal():
                     "Error", "No se ha seleccionado ningún archivo")
                 return
 
+        elif self.botonNuevoDron == True:
+
+            try:
+                nombre_dron = self.ingresoDato.get().strip()
+
+                # Se comprueba que el nombre del dron no exista
+                dronYaExiste = False
+                actual = self.lista_drones.primero
+                while actual != None:
+                    if actual.dron.nombre == nombre_dron:
+                        messagebox.showerror(
+                            "Error", "El nombre del dron ya existe")
+                        dronYaExiste = True
+                    actual = actual.siguiente
+
+                if dronYaExiste == False:
+                    # Se crea el objeto dron
+                    nuevo_dron = dron(nombre_dron)
+                    # Se inserta el dron en la lista de drones
+                    self.lista_drones.insertar_dato_ordenado(nuevo_dron)
+                    messagebox.showinfo(
+                        "Nuevo dron", "Nuevo Dron agregado con exito")
+
+                # self.lista_drones.recorrer_e_imprimir_lista()
+                self.botonNuevoDron = False
+
+            except:
+                messagebox.showerror(
+                    "Error", "No se ha podido agregar el nuevo dron")
+                return
+
         else:
             messagebox.showerror(
-                "Error", "No se ha presionado el boton de graficar sistema de datos")
+                "Error", "No se ha podio realizar la acción")
             return
 
     def cargarArchivo(self):
@@ -223,6 +262,10 @@ class Pantalla_principal():
         try:
             self.lista, self.lista_drones = cargar_archivo()
             self.analizado = True
+            messagebox.showinfo(
+                "Carga de archivo", "Archivo cargado con exito")
+            # Elimina contenido del cuadro
+            self.text.delete(1.0, "end")
 
         except:
             messagebox.showerror(
@@ -234,6 +277,9 @@ class Pantalla_principal():
         if self.analizado == True:
 
             try:
+                # si se presiono antes el boton de nuevo dron se desactiva
+                self.botonNuevoDron = False
+
                 # Elimina contenido del cuadro
                 self.text.delete(1.0, "end")
 
@@ -279,7 +325,30 @@ class Pantalla_principal():
             return
 
     def agregar_nuevo_dron(self):
-        pass
+
+        if self.analizado == True:
+
+            try:
+                # si se presiono antes el boton de graficar contenido se desactiva
+                self.botonGraficaContenido = False
+
+                self.botonNuevoDron = True
+                # Elimina contenido del cuadro
+                self.text.delete(1.0, "end")
+
+                # set contenido
+                self.text.insert(1.0, "Ingrese el nombre del nuevo dron \n")
+
+            except:
+                messagebox.showerror(
+                    "Error", "No se ha podido agregar el nuevo dron")
+                return
+
+        else:
+
+            messagebox.showerror(
+                "Error", "No se ha cargado ningun archivo")
+            return
 
 
 # mostrar pantalla

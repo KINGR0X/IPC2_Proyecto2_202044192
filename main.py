@@ -135,29 +135,3 @@ def imprimir_nombres_lista_drones(lista_drones_temporal):
         actual = actual.siguiente
 
     return listaDrones
-
-
-# def agregar_nuevo_dron():
-
-#     # Se le piden al usuario los datos del dron
-#     nombre_dron = input("Ingrese el nombre del dron: ").strip()
-
-#     # Se comprueba que el nombre del dron no exista
-#     dronYaExiste = False
-#     actual = lista_drones_temporal.primero
-#     while actual != None:
-#         if actual.dron.nombre == nombre_dron:
-#             print("El nombre del dron ya existe")
-#             dronYaExiste = True
-#         actual = actual.siguiente
-
-#     if dronYaExiste == False:
-#         # Se crea el objeto dron
-#         nuevo_dron = dron(nombre_dron)
-#         # Se inserta el dron en la lista de drones
-#         lista_drones_temporal.insertar_dato_ordenado(nuevo_dron)
-
-#     lista_drones_temporal.recorrer_e_imprimir_lista()
-
-
-# agregar_nuevo_dron()
