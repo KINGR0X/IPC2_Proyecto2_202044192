@@ -13,85 +13,104 @@ from altura import altura
 from colorama import init, Fore, Back, Style
 import os
 
-# Recuperar el xml
-ruta = askopenfilename()
-archivo = open(ruta, "r")
-archivo.close()
 
-# Parsear para que la aplicación entienda que manipulará xml
-tree = ET.parse(ruta)
-raiz = tree.getroot()
+def cargar_archivo():
+    # Recuperar el xml
+    ruta = askopenfilename()
+    archivo = open(ruta, "r")
+    archivo.close()
 
-# Lectura del xml
-# Lista que guarda los sistemas de drones
-lista_drones_temporal = lista_drones()
-lista_sistema_temporal = lista_sistema_drones()
+    # Parsear para que la aplicación entienda que manipulará xml
+    tree = ET.parse(ruta)
+    raiz = tree.getroot()
 
-# === Guardar lista de drones ===
-for drones in raiz.findall('listaDrones'):
+    # Lectura del xml
+    # Lista que guarda los sistemas de drones
+    lista_drones_temporal = lista_drones()
+    lista_sistema_temporal = lista_sistema_drones()
 
-    for dronn in drones.findall('dron'):
-        nuevo_dron = dronn.text
+    # === Guardar lista de drones ===
+    for drones in raiz.findall('listaDrones'):
 
-        nuevo = dron(str(nuevo_dron))
+        for dronn in drones.findall('dron'):
+            nuevo_dron = dronn.text
 
-        lista_drones_temporal.insertar_dato_ordenado(nuevo)
+            nuevo = dron(str(nuevo_dron))
 
-    # === Lectura del Xml en cascada desde listaSistemasDrones ===
+            lista_drones_temporal.insertar_dato_ordenado(nuevo)
 
-    for listaSDrones in raiz.findall('listaSistemasDrones'):
+        # === Lectura del Xml en cascada desde listaSistemasDrones ===
 
-        for sDrones in listaSDrones.findall('sistemaDrones'):
-            lista_contenido_temporal = lista_contenido()
-            nombre_SistemaDron = sDrones.get('nombre')
+        for listaSDrones in raiz.findall('listaSistemasDrones'):
 
-            for alturaMax in sDrones.findall('alturaMaxima'):
-                altura_maxima = alturaMax.text
+            for sDrones in listaSDrones.findall('sistemaDrones'):
+                lista_contenido_temporal = lista_contenido()
+                nombre_SistemaDron = sDrones.get('nombre')
 
-                for cantidadD in sDrones.findall('cantidadDrones'):
-                    cantidad_drones = cantidadD.text
+                for alturaMax in sDrones.findall('alturaMaxima'):
+                    altura_maxima = alturaMax.text
 
-                    for contenido_sistema in sDrones.findall('contenido'):
-                        # inicialización de listas
-                        lista_altura_temporal = lista_altura()
+                    for cantidadD in sDrones.findall('cantidadDrones'):
+                        cantidad_drones = cantidadD.text
 
-                        for dron_contenido in contenido_sistema.findall('dron'):
+                        for contenido_sistema in sDrones.findall('contenido'):
+                            # inicialización de listas
+                            lista_altura_temporal = lista_altura()
 
-                            nuevo_dron_contenido = dron_contenido.text
-                            # Creación del objeto dron
-                            # de momento se guarda para luego añadirlo al tener las alturas
-                            nombre_dron = dron(str(nuevo_dron_contenido))
-                            # print(nombre_dron.nombre)
+                            for dron_contenido in contenido_sistema.findall('dron'):
 
-                            for alturas in contenido_sistema.findall('alturas'):
+                                nuevo_dron_contenido = dron_contenido.text
+                                # Creación del objeto dron
+                                # de momento se guarda para luego añadirlo al tener las alturas
+                                nombre_dron = dron(str(nuevo_dron_contenido))
+                                # print(nombre_dron.nombre)
 
-                                for altura_dron in alturas.findall('altura'):
-                                    # cada altura debe de tener un valor y una letra
-                                    valor_altura = altura_dron.get('valor')
-                                    letra_altura = str(altura_dron.text)
+                                for alturas in contenido_sistema.findall('alturas'):
 
-                                    altura_temporal = altura(
-                                        valor_altura, letra_altura)
+                                    for altura_dron in alturas.findall('altura'):
+                                        # cada altura debe de tener un valor y una letra
+                                        valor_altura = altura_dron.get('valor')
+                                        letra_altura = str(altura_dron.text)
 
-                                    lista_altura_temporal.insertar_dato(
-                                        altura_temporal)
+                                        altura_temporal = altura(
+                                            valor_altura, letra_altura)
 
-                            # Se insertan los datos en la lista de contenido
-                        lista_contenido_temporal.insertar_dato(
-                            contenido(nombre_dron, lista_altura_temporal))
+                                        lista_altura_temporal.insertar_dato(
+                                            altura_temporal)
 
-                    # Se agregan las listas a la lista de sistema_drones
-            lista_sistema_temporal.insertar_dato(sistema_drones(
-                nombre_SistemaDron, altura_maxima, cantidad_drones, lista_contenido_temporal))
+                                # Se insertan los datos en la lista de contenido
+                            lista_contenido_temporal.insertar_dato(
+                                contenido(nombre_dron, lista_altura_temporal))
+
+                        # Se agregan las listas a la lista de sistema_drones
+                lista_sistema_temporal.insertar_dato(sistema_drones(
+                    nombre_SistemaDron, altura_maxima, cantidad_drones, lista_contenido_temporal))
+
+    # lista_sistema_temporal.recorrer_e_imprimir_lista()
+    return lista_sistema_temporal
 
 
-# === Generar grafica ===
-print(Fore.YELLOW+"=== Ingrese el numero de la señal a graficar===")
+def imprimir_nombres_sistemas_drones(lista_sistema_temporal):
+    # variable para guardar los nombres de los sistemas de drones
+    listaD = "Ingrese el número del sistema de drones \n"
 
-# Funcionpara graficar
+    # === Imprimir las señales que hay en el archivo ===
+    actual = lista_sistema_temporal.primero
+    contador = 0
+    while actual != None:
+        contador += 1
+        listaD += str(contador)+". "+actual.sistema_drones.nombre
+        listaD += "\n"
+        # print(Fore.WHITE+str(contador)+". "+actual.sistema_drones.nombre)
+        actual = actual.siguiente
+
+    return listaD
+
+# Funcion para graficar
 
 
-def generar_grafica_original(nombreSignal):
+def generar_grafica_original(nombreSignal, lista_sistema_temporal, direccion_grafica):
+
     nombreOriginal = direccion_grafica+"_original"
     nombre = nombreOriginal+".dot"
     f = open(nombre, 'w')
@@ -103,64 +122,30 @@ def generar_grafica_original(nombreSignal):
     os.system("""dot -Tpng """+nombre+""" -o """+nombreOriginal+""".png""")
 
 
-# === Imprimir las señales que hay en el archivo ===
-actual = lista_sistema_temporal.primero
-contador = 0
-while actual != None:
-    contador += 1
-    print(Fore.WHITE+str(contador)+". "+actual.sistema_drones.nombre)
-    actual = actual.siguiente
+# def agregar_nuevo_dron():
 
-# el usuario escoge un numero
-numero_signal = input("Señal a graficar: ").strip()
+#     # Se le piden al usuario los datos del dron
+#     nombre_dron = input("Ingrese el nombre del dron: ").strip()
 
-# === convertir el numero seleccionado a el nombre de la señal ===
-actual = lista_sistema_temporal.primero
-contadorAux = 0
-signal_a_graficar = ""
-while actual != None:
-    contadorAux += 1
-    if numero_signal == str(contadorAux):
-        signal_a_graficar = actual.sistema_drones.nombre
-        # lista_sistema_temporal.calcular_los_patrones(str(actual.sistema_drones.nombre))
-    actual = actual.siguiente
+#     # Se comprueba que el nombre del dron no exista
+#     dronYaExiste = False
+#     actual = lista_drones_temporal.primero
+#     while actual != None:
+#         if actual.dron.nombre == nombre_dron:
+#             print("El nombre del dron ya existe")
+#             dronYaExiste = True
+#         actual = actual.siguiente
 
-# El usuario selecciona donde guardar la grafica
-print(Fore.YELLOW+"=== Seleccione una ubicación para guardar la grafica ===")
-# se pide la dirección donde se guardará el archivo
-direccion_grafica = filedialog.asksaveasfilename(
-    filetypes=[("Archivos de texto", "*.dot"), ("Todos los archivos", "*.*")],
-    title="Guardar archivo como", initialfile="Matriz")
+#     if dronYaExiste == False:
+#         # Se crea el objeto dron
+#         nuevo_dron = dron(nombre_dron)
+#         # Se inserta el dron en la lista de drones
+#         lista_drones_temporal.insertar_dato_ordenado(nuevo_dron)
+
+#     lista_drones_temporal.recorrer_e_imprimir_lista()
 
 
-generar_grafica_original(signal_a_graficar)
-print(Fore.GREEN+"Graficas generadas con exito")
-
-
-def agregar_nuevo_dron():
-
-    # Se le piden al usuario los datos del dron
-    nombre_dron = input("Ingrese el nombre del dron: ").strip()
-
-    # Se comprueba que el nombre del dron no exista
-    dronYaExiste = False
-    actual = lista_drones_temporal.primero
-    while actual != None:
-        if actual.dron.nombre == nombre_dron:
-            print("El nombre del dron ya existe")
-            dronYaExiste = True
-        actual = actual.siguiente
-
-    if dronYaExiste == False:
-        # Se crea el objeto dron
-        nuevo_dron = dron(nombre_dron)
-        # Se inserta el dron en la lista de drones
-        lista_drones_temporal.insertar_dato_ordenado(nuevo_dron)
-
-    lista_drones_temporal.recorrer_e_imprimir_lista()
-
-
-agregar_nuevo_dron()
+# agregar_nuevo_dron()
 
 
 # lista_drones_temporal.recorrer_e_imprimir_lista()

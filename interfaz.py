@@ -1,6 +1,7 @@
 from fileinput import filename
 from tkinter.filedialog import askopenfilename
 from tkinter.tix import Tree
+from tkinter import filedialog
 from tkinter import Tk
 from tkinter import *
 from tkinter import ttk
@@ -8,6 +9,8 @@ from tkinter import messagebox
 from tkinter import scrolledtext
 from tkinter.filedialog import asksaveasfilename
 import os
+from main import cargar_archivo, imprimir_nombres_sistemas_drones, generar_grafica_original
+from sistema_drones import sistema_drones
 
 
 class Pantalla_principal():
@@ -33,6 +36,7 @@ class Pantalla_principal():
         self.text = ''
         posicionx1 = 480
         self.analizado = False
+        self.lista = sistema_drones
 
         # encabezado de cuadro de texto de entrada
         Label(self.Frame, text="Sistema de drones", font=(
@@ -55,7 +59,7 @@ class Pantalla_principal():
         analizarMenu = Menu(self.menubar, tearoff=0)
 
         analizarMenu .add_command(
-            label="Cargar XML", command=self.analizar, font=("Roboto Mono", 13))
+            label="Cargar XML", command=self.cargarArchivo, font=("Roboto Mono", 13))
 
         self.menubar.add_cascade(
             label="Cargar XML", menu=analizarMenu, font=("Roboto Mono", 13))
@@ -73,9 +77,9 @@ class Pantalla_principal():
         archivoMenu = Menu(self.menubar, tearoff=0)
 
         archivoMenu .add_command(
-            label="Ver listado de drones", command=self.nuevo, font=("Roboto Mono", 13))
+            label="Ver listado de drones", command=self.analizar, font=("Roboto Mono", 13))
         archivoMenu .add_command(
-            label="Agregar nuevo dron", command=self.abrirArchivo, font=("Roboto Mono", 13))
+            label="Agregar nuevo dron", command=self.cargarArchivo, font=("Roboto Mono", 13))
 
         self.menubar.add_cascade(
             label="Gestión de drones", menu=archivoMenu, font=("Roboto Mono", 13))
@@ -85,7 +89,7 @@ class Pantalla_principal():
         analizarMenu = Menu(self.menubar, tearoff=0)
 
         analizarMenu .add_command(
-            label="Grafica listado sitema de drones", command=self.analizar, font=("Roboto Mono", 13))
+            label="Grafica listado sitema de drones", command=self.graficar, font=("Roboto Mono", 13))
 
         self.menubar.add_cascade(
             label="Gestión sistema de drones", menu=analizarMenu, font=("Roboto Mono", 13))
@@ -94,9 +98,9 @@ class Pantalla_principal():
         archivoMenu = Menu(self.menubar, tearoff=0)
 
         archivoMenu .add_command(
-            label="Listado de mensajes", command=self.nuevo, font=("Roboto Mono", 13))
+            label="Listado de mensajes", command=self.analizar, font=("Roboto Mono", 13))
         archivoMenu .add_command(
-            label="Instrucciones para enviar un mensaje", command=self.abrirArchivo, font=("Roboto Mono", 13))
+            label="Instrucciones para enviar un mensaje", command=self.cargarArchivo, font=("Roboto Mono", 13))
 
         self.menubar.add_cascade(
             label="Gestión de mensajes", menu=archivoMenu, font=("Roboto Mono", 13))
@@ -114,11 +118,27 @@ class Pantalla_principal():
 
         self.pp.config(menu=self.menubar)
 
+        # cuadro entrada de datos
+
+        self.ingresoDato = StringVar()
+
+        self.ingresoDato_entry = Entry(
+            textvariable=self.ingresoDato, width=24, font=("Times New Roman", 14))
+
+        # posicionamiento del cuadro de entrada
+        self.ingresoDato_entry.place(x=30, y=200)
+
+        # Botón para guardar el texto que ingreso el usuario
+        self.botonGuardar = Button(
+            self.pp, text="Guardar", command=self.guardar_dato, width="10", height="3", bg="white")
+
+        self.botonGuardar.place(x=105, y=230)
+
         # cuadro de texto
         self.textContainer = Frame(self.pp, borderwidth=1, relief="sunken")
 
         self.text = Text(self.textContainer, font=(
-            "Times New Roman", 15), fg='white', bg="#444654", width=97, height=26, wrap="none")
+            "Times New Roman", 15), fg='white', bg="#444654", width=33, height=5, wrap="none")
 
         textVsb = Scrollbar(
             self.textContainer, orient="vertical", command=self.text.yview)
@@ -139,73 +159,67 @@ class Pantalla_principal():
         # Actualizacion del Frame
         self.Frame.mainloop()
 
-    def nuevo(self):
-
+    def guardar_dato(self):
         try:
-            self.texto = self.text.get(1.0, "end")
+            numero_signal = self.ingresoDato.get().strip()
 
-            if len(self.texto) != 1:
-                # pregunta si se desea guardar el archivo
-                respuesta = messagebox.askquestion(
-                    "Guardar", "¿Desea guardar el archivo antes de crear uno nuevo?")
+            # Luego de guardar el dato se grafica
 
-                if respuesta == "yes":
-                    # Tomar datos que esta en el cuadro de texto
-                    self.extensions = [("Archivos txt", f".txt"),
-                                       ("Archivos lfp", f".lfp"), ("All files", "*")]
+            # === convertir el numero seleccionado a el nombre de la señal ===
+            actual = self.lista.primero
+            contadorAux = 0
+            signal_a_graficar = ""
+            while actual != None:
+                contadorAux += 1
+                if numero_signal == str(contadorAux):
+                    signal_a_graficar = actual.sistema_drones.nombre
+                    # lista_sistema_temporal.calcular_los_patrones(str(actual.sistema_drones.nombre))
+                actual = actual.siguiente
 
-                    self.archivo_seleccionado = filename = asksaveasfilename(
-                        title="Seleccione un archivo", filetypes=[("Archivos txt", f".txt"), ("Archivos lfp", f".lfp"), ("All files", "*")], defaultextension=self.extensions, initialfile="Documento")
+            print(signal_a_graficar)
 
-                    archivo = open(self.archivo_seleccionado,
-                                   'w', encoding="utf-8")
-                    archivo.write(self.texto)
+            # El usuario selecciona donde guardar la grafica
+            direccion_grafica = filedialog.asksaveasfilename(
+                filetypes=[("Archivos de texto", "*.dot"),
+                           ("Todos los archivos", "*.*")],
+                title="Guardar archivo como", initialfile="Matriz")
 
-                    # mensaje de guardado
-                    messagebox.showinfo(
-                        "Guardado", "Archivo guardado con exito")
-                else:
-                    self.text.delete(1.0, "end")
+            generar_grafica_original(
+                signal_a_graficar, self.lista, direccion_grafica)
 
-            else:
-                self.text.delete(1.0, "end")
+            messagebox.showinfo(
+                "Grafica", "Grafica generada con exito")
 
         except:
             messagebox.showerror(
                 "Error", "No se ha seleccionado ningún archivo")
             return
 
-    def abrirArchivo(self):
-        self.analizado = False
-        x = ""
-        self.archivo_seleccionado = ''
-        Tk().withdraw()
+    def cargarArchivo(self):
 
         try:
-            self.archivo_seleccionado = filename = askopenfilename(
-                title="Seleccione un archivo", filetypes=[("Archivos txt", f"*.txt"), ("Archivos lfp", f"*.lfp"), ("All files", "*")])
-
-            with open(filename, encoding="utf-8") as infile:
-                x = infile.read()
-
-            self.texto = x
-
-            # se separa el nombre del archivo en directorio y nombre
-            os.path.split(filename)
-            # se obtiene el nombre del archivo con la extension
-            self.filename = os.path.split(filename)[1]
-            # se obtiene el nombre del archivo sin la extension
-            self.filename = os.path.splitext(self.filename)[0]
-
-            # Elimina contenido del cuadro
-            self.text.delete(1.0, "end")
-
-            # set contenido
-            self.text.insert(1.0, self.texto)
+            self.lista = cargar_archivo()
+            self.analizado = False
 
         except:
             messagebox.showerror(
                 "Error", "Archivo no soportado")
+            return
+
+    def graficar(self):
+
+        try:
+            # Elimina contenido del cuadro
+            self.text.delete(1.0, "end")
+
+            n = imprimir_nombres_sistemas_drones(self.lista)
+
+            # set contenido
+            self.text.insert(1.0, n)
+
+        except:
+            messagebox.showerror(
+                "Error", "No se ha podido generar la grafica")
             return
 
     def guardar(self):
