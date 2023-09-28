@@ -22,6 +22,27 @@ class lista_drones:
         actual.siguiente = nodo_dron(dron=dron)
         self.contador_celdas += 1
 
+    def insertar_dato_ordenado(self, dron):
+        nuevo_dato = nodo_dron(dron=dron)
+        self.contador_celdas += 1
+        # Si la lista está vacía solo añade el nuevo nodo
+        if self.primero is None:
+            self.primero = nuevo_dato
+            return
+        # Caso especial: la nueva dron debe ser el nuevo primer nodo, debe reemplazar al primero
+        if dron.nombre < self.primero.dron.nombre:
+            nuevo_dato.siguiente = self.primero
+            self.primero = nuevo_dato
+            return
+        # Si no cumple con ninguno de los casos, recorrer hasta encontrar su posición
+        actual = self.primero
+        while actual.siguiente is not None and (
+                dron.nombre > actual.siguiente.dron.nombre or (
+                    dron.nombre == actual.siguiente.dron.nombre > actual.siguiente.dron.nombre)):
+            actual = actual.siguiente
+        nuevo_dato.siguiente = actual.siguiente
+        actual.siguiente = nuevo_dato
+
     def recorrer_e_imprimir_lista(self):
         print()
         print("======================= Lista drones =======================")
