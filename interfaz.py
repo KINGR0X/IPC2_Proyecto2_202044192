@@ -9,7 +9,7 @@ from tkinter import messagebox
 from tkinter import scrolledtext
 from tkinter.filedialog import asksaveasfilename
 import os
-from main import cargar_archivo, imprimir_nombres_sistemas_drones, generar_grafica_original, imprimir_nombres_lista_drones, imprimir_lista_mensajes
+from main import cargar_archivo, imprimir_nombres_sistemas_drones, generar_grafica_original, imprimir_nombres_lista_drones, imprimir_lista_mensajes, imprimir_mensajes
 from lista_sistema_drones import lista_sistema_drones
 from lista_drones import lista_drones
 from dron import dron
@@ -41,6 +41,7 @@ class Pantalla_principal():
         self.analizado = False
         self.botonGraficaContenido = False
         self.botonNuevoDron = False
+        self.botonMensaje = False
         self.lista = lista_sistema_drones()
         self.lista_drones = lista_drones()
         self.lista_mensajes = lista_mensaje()
@@ -107,7 +108,7 @@ class Pantalla_principal():
         archivoMenu .add_command(
             label="Listado de mensajes", command=self.listado_mensajes, font=("Roboto Mono", 13))
         archivoMenu .add_command(
-            label="Instrucciones para enviar un mensaje", command=self.cargarArchivo, font=("Roboto Mono", 13))
+            label="Instrucciones para enviar un mensaje", command=self.instrucciones_para_enviar_un_mensaje, font=("Roboto Mono", 13))
 
         self.menubar.add_cascade(
             label="Gestión de mensajes", menu=archivoMenu, font=("Roboto Mono", 13))
@@ -172,6 +173,7 @@ class Pantalla_principal():
             self.analizado = False
             self.botonGraficaContenido = False
             self.botonNuevoDron = False
+            self.botonMensaje = False
 
             # Limpieza de listas
             self.lista = lista_sistema_drones()
@@ -257,6 +259,33 @@ class Pantalla_principal():
             except:
                 messagebox.showerror(
                     "Error", "No se ha podido agregar el nuevo dron")
+                return
+
+        elif self.botonMensaje == True:
+
+            try:
+                nombre_mensaje = self.ingresoDato.get().strip()
+
+                # === convertir el numero seleccionado a el nombre del mensaje ===
+                actual = self.lista_mensajes.primero
+                contadorAux = 0
+                mensaje_select = ""
+                while actual != None:
+                    contadorAux += 1
+                    if nombre_mensaje == str(contadorAux):
+                        mensaje_select = actual.mensaje.sistemaDrones
+                        # lista_sistema_temporal.calcular_los_patrones(str(actual.sistema_drones.nombre))
+                    actual = actual.siguiente
+
+                print(mensaje_select)
+                self.botonMensaje = False
+
+                messagebox.showinfo(
+                    "Grafica", "Grafica de instrucciones generada con exito")
+
+            except:
+                messagebox.showerror(
+                    "Error", "No se ha seleccionado ningún archivo")
                 return
 
         else:
@@ -369,6 +398,33 @@ class Pantalla_principal():
 
                 # set contenido
                 self.text.insert(1.0, m)
+
+            except:
+                messagebox.showerror(
+                    "Error", "No se ha podido mostrar el listado de mensajes")
+                return
+
+        else:
+
+            messagebox.showerror(
+                "Error", "No se ha cargado ningun archivo")
+            return
+
+    def instrucciones_para_enviar_un_mensaje(self):
+
+        if self.analizado == True:
+
+            try:
+                self.botonMensaje = True
+                # Elimina contenido del cuadro
+                self.text.delete(1.0, "end")
+
+                l = imprimir_mensajes(self.lista_mensajes)
+
+                # set contenido
+                self.text.insert(1.0, l)
+
+                # escoger mensaje
 
             except:
                 messagebox.showerror(

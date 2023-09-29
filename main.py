@@ -181,20 +181,33 @@ def imprimir_lista_mensajes(lista_mensajes):
     actual = lista_mensajes.primero
     while actual != None:
         listaDrones += "\n"
-        listaDrones += "Mensaje: " + actual.mensaje.nombre
+        listaDrones += "Nombre: " + actual.mensaje.nombre
         listaDrones += "\n"
         listaDrones += "Sistema de drones: " + actual.mensaje.sistemaDrones
 
         listaDrones += actual.mensaje.lista_instruccion.recorrer_e_imprimir_lista()
-        # # Listado de instrucciones
-        # while actual.mensaje.lista_instruccion.primero != None:
-        #     listaDrones += "\n"
-        #     listaDrones += "Dron: " + \
-        #         actual.mensaje.lista_instruccion.primero.instruccion.dron + "; "
-        #     listaDrones += "Altura: " + actual.mensaje.lista_instruccion.primero.instruccion.altura
 
-        #     actual.mensaje.lista_instruccion.primero = actual.mensaje.lista_instruccion.primero.siguiente
+        actual = actual.siguiente
+        listaDrones += "\n"
 
+    return listaDrones
+
+
+# Mostrar lista de drones
+def imprimir_mensajes(lista_mensajes):
+
+    # variable para guardar los nombres de los sistemas de drones
+    listaDrones = "Escoja un mensaje para mostrar \n"
+    contador = 1
+    # === Imprimir las señales que hay en el archivo ===
+    actual = lista_mensajes.primero
+    while actual != None:
+        listaDrones += "\n"
+        listaDrones += str(contador)+". "+"Nombre: " + actual.mensaje.nombre
+        listaDrones += "\n"
+        listaDrones += "Sistema de drones: " + actual.mensaje.sistemaDrones
+
+        contador += 1
         actual = actual.siguiente
         listaDrones += "\n"
 
