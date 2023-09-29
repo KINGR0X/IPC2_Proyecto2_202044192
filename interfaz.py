@@ -9,10 +9,11 @@ from tkinter import messagebox
 from tkinter import scrolledtext
 from tkinter.filedialog import asksaveasfilename
 import os
-from main import cargar_archivo, imprimir_nombres_sistemas_drones, generar_grafica_original, imprimir_nombres_lista_drones
+from main import cargar_archivo, imprimir_nombres_sistemas_drones, generar_grafica_original, imprimir_nombres_lista_drones, imprimir_lista_mensajes
 from lista_sistema_drones import lista_sistema_drones
 from lista_drones import lista_drones
 from dron import dron
+from lista_mensaje import lista_mensaje
 
 
 class Pantalla_principal():
@@ -42,6 +43,7 @@ class Pantalla_principal():
         self.botonNuevoDron = False
         self.lista = lista_sistema_drones()
         self.lista_drones = lista_drones()
+        self.lista_mensajes = lista_mensaje()
 
         # encabezado de cuadro de texto de entrada
         Label(self.Frame, text="Sistema de drones", font=(
@@ -103,7 +105,7 @@ class Pantalla_principal():
         archivoMenu = Menu(self.menubar, tearoff=0)
 
         archivoMenu .add_command(
-            label="Listado de mensajes", command=self.ver_listado_de_drones, font=("Roboto Mono", 13))
+            label="Listado de mensajes", command=self.listado_mensajes, font=("Roboto Mono", 13))
         archivoMenu .add_command(
             label="Instrucciones para enviar un mensaje", command=self.cargarArchivo, font=("Roboto Mono", 13))
 
@@ -174,6 +176,7 @@ class Pantalla_principal():
             # Limpieza de listas
             self.lista = lista_sistema_drones()
             self.lista_drones = lista_drones()
+            self.lista_mensajes = lista_mensaje()
 
             messagebox.showinfo(
                 "Inicialización", "Sistema inicializado con exito")
@@ -264,7 +267,7 @@ class Pantalla_principal():
     def cargarArchivo(self):
 
         try:
-            cargar_archivo(self.lista_drones, self.lista)
+            cargar_archivo(self.lista_drones, self.lista, self.lista_mensajes)
             self.analizado = True
             messagebox.showinfo(
                 "Carga de archivo", "Archivo cargado con exito")
@@ -346,6 +349,30 @@ class Pantalla_principal():
             except:
                 messagebox.showerror(
                     "Error", "No se ha podido agregar el nuevo dron")
+                return
+
+        else:
+
+            messagebox.showerror(
+                "Error", "No se ha cargado ningun archivo")
+            return
+
+    def listado_mensajes(self):
+
+        if self.analizado == True:
+
+            try:
+                # Elimina contenido del cuadro
+                self.text.delete(1.0, "end")
+
+                m = imprimir_lista_mensajes(self.lista_mensajes)
+
+                # set contenido
+                self.text.insert(1.0, m)
+
+            except:
+                messagebox.showerror(
+                    "Error", "No se ha podido mostrar el listado de mensajes")
                 return
 
         else:

@@ -43,14 +43,14 @@ class lista_mensaje:
         nuevo_dato.siguiente = actual.siguiente
         actual.siguiente = nuevo_dato
 
-    def recorrer_e_imprimir_lista(self):
-        print()
-        print("======================= Lista Mensajes =======================")
-        actual = self.primero
-        while actual != None:
-            print("Mensaje:", actual.mensaje.nombre)
-            print("Sistema de drones:", actual.mensaje.sistemaDrones)
-            # recorrer lista de instrucciones
-            actual.mensaje.lista_instruccion.recorrer_e_imprimir_lista()
-            actual = actual.siguiente
-        print("============================================================")
+    # def recorrer_e_imprimir_lista(self):
+    #     print()
+    #     print("======================= Lista Mensajes =======================")
+    #     actual = self.primero
+    #     while actual != None:
+    #         print("Mensaje:", actual.mensaje.nombre)
+    #         print("Sistema de drones:", actual.mensaje.sistemaDrones)
+    #         # recorrer lista de instrucciones
+    #         actual.mensaje.lista_instruccion.recorrer_e_imprimir_lista()
+    #         actual = actual.siguiente
+    #     print("============================================================")

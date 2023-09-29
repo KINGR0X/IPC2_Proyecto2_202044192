@@ -23,10 +23,17 @@ class lista_instruccion:
         self.contador_celdas += 1
 
     def recorrer_e_imprimir_lista(self):
-        print("============================================================")
+        # variable para guardar los nombres de los sistemas de drones
+        listaDrones = ""
+        # === Imprimir las señales que hay en el archivo ===
         actual = self.primero
         while actual != None:
-            print("Dron:", actual.instruccion.dron,
-                  "Altura:", actual.instruccion.altura)
+            listaDrones += "\n"
+            listaDrones += "Dron: " + actual.instruccion.dron + \
+                "; "+"Altura: " + actual.instruccion.altura
+
+            # print(actual.instruccion.dron)
+            # print(actual.instruccion.altura)
             actual = actual.siguiente
-        print("============================================================")
+
+        return listaDrones

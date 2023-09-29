@@ -18,7 +18,7 @@ from lista_instruccion import lista_instruccion
 from instruccion import instruccion
 
 
-def cargar_archivo(lista_dron, lista_sistemas):
+def cargar_archivo(lista_dron, lista_sistemas, lista_mensajes):
     # Recuperar el xml
     ruta = askopenfilename()
     archivo = open(ruta, "r")
@@ -72,8 +72,7 @@ def cargar_archivo(lista_dron, lista_sistemas):
                     nuevo_mensaje = mensaje(
                         str(nuevomensaje), str(mensaje_sistemaD),  lista_instrucciones_temporal)
 
-            lista_mensajes_temporal.insertar_dato_ordenado(nuevo_mensaje)
-        lista_mensajes_temporal.recorrer_e_imprimir_lista()
+            lista_mensajes.insertar_dato_ordenado(nuevo_mensaje)
 
         # === Lectura del Xml en cascada desde listaSistemasDrones ===
 
@@ -169,5 +168,34 @@ def imprimir_nombres_lista_drones(lista_drones_temporal):
         listaDrones += "\n"
 
         actual = actual.siguiente
+
+    return listaDrones
+
+
+def imprimir_lista_mensajes(lista_mensajes):
+
+    # variable para guardar los nombres de los sistemas de drones
+    listaDrones = "Listado de mensajes \n"
+
+    # === Imprimir las señales que hay en el archivo ===
+    actual = lista_mensajes.primero
+    while actual != None:
+        listaDrones += "\n"
+        listaDrones += "Mensaje: " + actual.mensaje.nombre
+        listaDrones += "\n"
+        listaDrones += "Sistema de drones: " + actual.mensaje.sistemaDrones
+
+        listaDrones += actual.mensaje.lista_instruccion.recorrer_e_imprimir_lista()
+        # # Listado de instrucciones
+        # while actual.mensaje.lista_instruccion.primero != None:
+        #     listaDrones += "\n"
+        #     listaDrones += "Dron: " + \
+        #         actual.mensaje.lista_instruccion.primero.instruccion.dron + "; "
+        #     listaDrones += "Altura: " + actual.mensaje.lista_instruccion.primero.instruccion.altura
+
+        #     actual.mensaje.lista_instruccion.primero = actual.mensaje.lista_instruccion.primero.siguiente
+
+        actual = actual.siguiente
+        listaDrones += "\n"
 
     return listaDrones
