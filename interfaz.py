@@ -114,7 +114,7 @@ class Pantalla_principal():
         analizarMenu = Menu(self.menubar, tearoff=0)
 
         analizarMenu .add_command(
-            label="Ayuda", command=self.ver_listado_de_drones, font=("Roboto Mono", 13))
+            label="Ayuda", command=self.ayuda, font=("Roboto Mono", 13))
 
         self.menubar.add_cascade(
             label="Ayuda", menu=analizarMenu, font=("Roboto Mono", 13))
@@ -131,19 +131,19 @@ class Pantalla_principal():
             textvariable=self.ingresoDato, width=39, font=("Times New Roman", 14))
 
         # posicionamiento del cuadro de entrada
-        self.ingresoDato_entry.place(x=30, y=192)
+        self.ingresoDato_entry.place(x=30, y=310)
 
         # Botón para guardar el texto que ingreso el usuario
         self.botonGuardar = Button(
             self.pp, text="Guardar", command=self.guardar_dato, width="10", height="3", bg="white")
 
-        self.botonGuardar.place(x=170, y=228)
+        self.botonGuardar.place(x=170, y=345)
 
         # cuadro de texto
         self.textContainer = Frame(self.pp, borderwidth=1, relief="sunken")
 
         self.text = Text(self.textContainer, font=(
-            "Times New Roman", 15), fg='white', bg="#444654", width=33, height=5, wrap="none")
+            "Times New Roman", 15), fg='white', bg="#444654", width=55, height=10, wrap="none")
 
         textVsb = Scrollbar(
             self.textContainer, orient="vertical", command=self.text.yview)
@@ -159,7 +159,7 @@ class Pantalla_principal():
         self.textContainer.grid_rowconfigure(0, weight=1)
         self.textContainer.grid_columnconfigure(0, weight=1)
 
-        self.textContainer.place(x=30, y=52)
+        self.textContainer.place(x=30, y=55)
 
         # Actualizacion del Frame
         self.Frame.mainloop()
@@ -349,6 +349,23 @@ class Pantalla_principal():
             messagebox.showerror(
                 "Error", "No se ha cargado ningun archivo")
             return
+
+    def ayuda(self):
+
+        # Elimina contenido del cuadro
+        self.text.delete(1.0, "end")
+
+        # Datos del estudiante
+        datosDelEstudiante = """
+Datos del estudiante:
+Nombre: Elian Angel Fernando Reyes Yac
+Carnet: 202044192
+
+Documentación:
+https://github.com/KINGR0X/IPC2_Proyecto2_202044192
+"""
+        # set contenido
+        self.text.insert(1.0, datosDelEstudiante)
 
 
 # mostrar pantalla
