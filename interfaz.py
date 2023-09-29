@@ -10,7 +10,7 @@ from tkinter import scrolledtext
 from tkinter.filedialog import asksaveasfilename
 import os
 from main import cargar_archivo, imprimir_nombres_sistemas_drones, generar_grafica_original, imprimir_nombres_lista_drones
-from sistema_drones import sistema_drones
+from lista_sistema_drones import lista_sistema_drones
 from lista_drones import lista_drones
 from dron import dron
 
@@ -40,8 +40,8 @@ class Pantalla_principal():
         self.analizado = False
         self.botonGraficaContenido = False
         self.botonNuevoDron = False
-        self.lista = sistema_drones
-        self.lista_drones = lista_drones
+        self.lista = lista_sistema_drones()
+        self.lista_drones = lista_drones()
 
         # encabezado de cuadro de texto de entrada
         Label(self.Frame, text="Sistema de drones", font=(
@@ -171,6 +171,10 @@ class Pantalla_principal():
             self.botonGraficaContenido = False
             self.botonNuevoDron = False
 
+            # Limpieza de listas
+            self.lista = lista_sistema_drones()
+            self.lista_drones = lista_drones()
+
             messagebox.showinfo(
                 "Inicialización", "Sistema inicializado con exito")
 
@@ -260,7 +264,7 @@ class Pantalla_principal():
     def cargarArchivo(self):
 
         try:
-            self.lista, self.lista_drones = cargar_archivo()
+            cargar_archivo(self.lista_drones, self.lista)
             self.analizado = True
             messagebox.showinfo(
                 "Carga de archivo", "Archivo cargado con exito")
@@ -362,7 +366,7 @@ Nombre: Elian Angel Fernando Reyes Yac
 Carnet: 202044192
 
 Documentación:
-https://github.com/KINGR0X/IPC2_Proyecto2_202044192
+https://github.com/KINGR0X/IPC2_Proyecto2_202044192/tree/main/Documentacion
 """
         # set contenido
         self.text.insert(1.0, datosDelEstudiante)
