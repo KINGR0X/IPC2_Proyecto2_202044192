@@ -9,7 +9,7 @@ from tkinter import messagebox
 from tkinter import scrolledtext
 from tkinter.filedialog import asksaveasfilename
 import os
-from main import cargar_archivo, imprimir_nombres_sistemas_drones, generar_grafica_original, imprimir_nombres_lista_drones, imprimir_lista_mensajes, imprimir_mensajes
+from main import cargar_archivo, imprimir_nombres_sistemas_drones, generar_grafica_original, imprimir_nombres_lista_drones, imprimir_lista_mensajes, imprimir_mensajes,  descifrar_mensaje
 from lista_sistema_drones import lista_sistema_drones
 from lista_drones import lista_drones
 from dron import dron
@@ -274,10 +274,13 @@ class Pantalla_principal():
                     contadorAux += 1
                     if nombre_mensaje == str(contadorAux):
                         mensaje_select = actual.mensaje.sistemaDrones
+                        lista_instrucciones_select = actual.mensaje.lista_instruccion
                         # lista_sistema_temporal.calcular_los_patrones(str(actual.sistema_drones.nombre))
                     actual = actual.siguiente
 
-                print(mensaje_select)
+                # Se llama la funcion para descifrar el mensaje
+                descifrar_mensaje(mensaje_select, self.lista,
+                                  lista_instrucciones_select)
                 self.botonMensaje = False
 
                 messagebox.showinfo(
@@ -423,8 +426,6 @@ class Pantalla_principal():
 
                 # set contenido
                 self.text.insert(1.0, l)
-
-                # escoger mensaje
 
             except:
                 messagebox.showerror(
