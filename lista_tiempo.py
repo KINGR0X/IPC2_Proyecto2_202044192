@@ -26,7 +26,7 @@ class lista_tiempo:
         print("============================================================")
         actual = self.primero
         while actual != None:
-            print("Altura:", actual.tiempo.valor,
-                  "Letra:", actual.tiempo.letra)
+            print("Tiempo:", actual.tiempo.valor,
+                  "Accion:", actual.tiempo.accion)
             actual = actual.siguiente
         print("============================================================")

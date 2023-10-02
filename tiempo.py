@@ -1,4 +1,4 @@
 class tiempo:
     def __init__(self, valor, accion):
         self.valor = valor
-        self.letra = accion
+        self.accion = accion

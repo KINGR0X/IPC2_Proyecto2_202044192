@@ -16,6 +16,10 @@ from lista_mensaje import lista_mensaje
 from mensaje import mensaje
 from lista_instruccion import lista_instruccion
 from instruccion import instruccion
+from lista_contenido_m import lista_contenido_m
+from contenido_m import contenido_m
+from tiempo import tiempo
+from lista_tiempo import lista_tiempo
 
 
 def cargar_archivo(lista_dron, lista_sistemas, lista_mensajes):
@@ -218,10 +222,14 @@ def imprimir_mensajes(lista_mensajes):
 
 # === descifrar mensaje ===
 def descifrar_mensaje(mensaje_seleccionado, lista_sistema_drones, lista_instrucciones_select):
+    lista_contenido_m_temporal = lista_contenido_m()
+
+    lista_contenido_m_anterior = lista_contenido_m()
 
     # === Se busca en la lista_sistema_drones el sistema de drones que se seleccionó ===
     print("Sistema de drones del mensaje seleccionado:", mensaje_seleccionado)
 
+    # === Se busca en la lista_sistema_drones el sistema de drones que se seleccionó ===
     actual = lista_sistema_drones.primero
     while actual != None:
         if actual.sistema_drones.nombre == mensaje_seleccionado:
@@ -231,30 +239,95 @@ def descifrar_mensaje(mensaje_seleccionado, lista_sistema_drones, lista_instrucc
             break
         actual = actual.siguiente
 
-    # Se descifra el mensaje
-    # Primero se convierte las instrucciones de lista_instrucciones_select a la letra que corresponde a cada altura del dron de la lista_sistema_drones
+    # Contador para los tiempos
+    contador_tiempo = 0
 
-    # Se recorre la lista de instrucciones
+    # === Se recorre la lista de instrucciones del mensaje seleccionado ===
+    lista_tiempo_temporal_anterior = lista_tiempo()
     actual = lista_instrucciones_select.primero
     while actual != None:
-        print("Dron: ", actual.instruccion.dron)
-        print("Altura: ", actual.instruccion.altura)
-        # Se recorre la lista de contenido del sistema de drones seleccionado
+        # print("Dron: ", actual.instruccion.dron)
+        # print("Altura: ", actual.instruccion.altura)
+
+        # === Se recorre la lista de contenido del sistema de drones seleccionado ===
+
+        lista_tiempo_temporal = lista_tiempo()
         actual2 = sistema_drones_seleccionado.lista_contenido.primero
         while actual2 != None:
+
             # Se verifica si el dron de la lista de instrucciones es igual al dron de la lista de contenido
             if actual.instruccion.dron == actual2.contenido.dron.nombre:
-                # Se recorre la lista de alturas del dron seleccionado
+
+                # === Se recorre cada dron y su lista de alturas ===
                 actual3 = actual2.contenido.lista_altura.primero
                 while actual3 != None:
-                    # Se verifica si el valor de la instrucción es igual al valor de la altura
+
+                    contador_tiempo += 1
+                    # se crea el valor del tiempo
+                    tiempo_temporal = tiempo(
+                        contador_tiempo, "Subir")
+                    lista_tiempo_temporal.insertar_dato(tiempo_temporal)
+
+                    lista_tiempo_temporal_anterior.insertar_dato(
+                        tiempo_temporal)
+
+                    # === Comprobación espera ===
+
+                    actualDronAnterior = lista_contenido_m_anterior.primero
+                    while actualDronAnterior != None:
+                        # print("Dron:", actualDronAnterior.contenido_m.dron)
+
+                        # se imprimen las alturas
+                        actualTiemposAnterior = actualDronAnterior.contenido_m.lista_tiempo.primero
+                        contador_aux = contador_tiempo+1
+                        while actualTiemposAnterior != None:
+                            if (actualTiemposAnterior.tiempo.accion == "Subir"):
+                                contador_tiempo += 1
+                                # se crea el valor del tiempo
+                                tiempo_temporal = tiempo(
+                                    contador_tiempo, "Esperar")
+                                lista_tiempo_temporal.insertar_dato(
+                                    tiempo_temporal)
+
+                                lista_tiempo_temporal_anterior.insertar_dato(
+                                    tiempo_temporal)
+
+                            actualTiemposAnterior = actualTiemposAnterior.siguiente
+                        actualDronAnterior = actualDronAnterior.siguiente
+                        contador_aux = 0
+
+                    # Si se encuentra la letra de la altura se emite la luz
                     if actual.instruccion.altura == actual3.altura.valor:
-                        # Se guarda la letra de la altura
-                        actual.instruccion.altura = actual3.altura.letra
-                        print("Letra descifrada:", actual.instruccion.altura)
+                        contador_tiempo += 1
+                        # se crea el valor del tiempo
+                        tiempo_temporal = tiempo(
+                            contador_tiempo, "Emitir luz")
+                        lista_tiempo_temporal.insertar_dato(tiempo_temporal)
+
+                        lista_tiempo_temporal_anterior.insertar_dato(
+                            tiempo_temporal)
                         break
+
                     actual3 = actual3.siguiente
+
                 break
+
             actual2 = actual2.siguiente
 
+        # Se reinicia la lista_contenido_m_temporal
+        lista_contenido_m_anterior = lista_contenido_m()
+
+        lista_contenido_m_anterior.insertar_dato(contenido_m(
+            actual.instruccion.dron, lista_tiempo_temporal))
+
+        lista_contenido_m_temporal.insertar_dato(contenido_m(
+            actual.instruccion.dron, lista_tiempo_temporal))
+        contador_tiempo = 0
         actual = actual.siguiente
+
+    # === Ahora se emite la luz ===
+
+    # se grafica la lista de contenido_m
+    lista_contenido_m_temporal.recorrer_e_imprimir_lista()
+    # lista_contenido_m_temporal.graficar(
+    #     "nombre_sistema", "sistema_drones", "TiempoOptimo")

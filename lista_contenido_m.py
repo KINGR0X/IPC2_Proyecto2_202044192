@@ -27,13 +27,13 @@ class lista_contenido_m:
         print("============================================================")
         actual = self.primero
         while actual != None:
-            print("Dron:", actual.contenido_m.dron.nombre)
+            print("Dron:", actual.contenido_m.dron)
 
-            actual.contenido_m.lista_altura.recorrer_e_imprimir_lista()
+            actual.contenido_m.lista_tiempo.recorrer_e_imprimir_lista()
             actual = actual.siguiente
         print("============================================================")
 
-    def graficar(self, nombre_sistema, alturaMax, cantidad_drones):
+    def graficar(self, nombre_sistema, sistema_drones, TiempoOptimo):
         # f = open('bb.dot', 'w')
         # variable que conmtiene la configuración del grafo
         # se crea el subgrafo primero
@@ -41,9 +41,9 @@ class lista_contenido_m:
 digraph G {
 subgraph {
 nodo_00[label=" """+nombre_sistema+""" ",fontcolor="#000000",fillcolor=gold, style=filled,shape=box];
-nodo_01_left[label="Altura maxima\\n"""+alturaMax+"""",fontcolor="#000000",fillcolor=gold, style=filled,shape=box];
+nodo_01_left[label="Altura maxima\\n"""+sistema_drones+"""",fontcolor="#000000",fillcolor=gold, style=filled,shape=box];
 nodo_00 -> nodo_01_left;
-nodo_01_right[label="Cantidad drones\\n"""+cantidad_drones+"""",fontcolor="#000000",fillcolor=gold, style=filled,shape=box];
+nodo_01_right[label="Cantidad drones\\n"""+TiempoOptimo+"""",fontcolor="#000000",fillcolor=gold, style=filled,shape=box];
 nodo_00 -> nodo_01_right;
 }
 
@@ -54,8 +54,8 @@ a0 [shape=none label=<
 <TABLE border="10" cellspacing="10" cellpadding="10" style="rounded" bgcolor="#088395" gradientangle="315">
             """
 
-        # Primero se deben de graficar las alturas tomando en cuenta la altura maxima
-        contador = int(alturaMax)+1
+        # Primero se deben de graficar las alturas tomando en cuenta la tiempo maxima
+        contador = int(sistema_drones)+1
         actual = self.primero
         # for que use el contador
         for i in range(contador):
@@ -92,11 +92,11 @@ a0 [shape=none label=<
                     str(actual.contenido_m.dron.nombre)+"""</TD>\n"""
 
                 # Lista de alturas
-                actualL = actual.contenido_m.lista_altura.primero
+                actualL = actual.contenido_m.lista_tiempo.primero
                 while actualL != None:
 
                     text += """<TD border="3"  bgcolor="orangered" gradientangle="315">""" + \
-                        str(actualL.altura.letra) + \
+                        str(actualL.tiempo.accion) + \
                         """</TD>\n"""
 
                     actualL = actualL.siguiente
