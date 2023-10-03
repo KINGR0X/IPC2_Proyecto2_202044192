@@ -9,11 +9,12 @@ from tkinter import messagebox
 from tkinter import scrolledtext
 from tkinter.filedialog import asksaveasfilename
 import os
-from main import cargar_archivo, imprimir_nombres_sistemas_drones, generar_grafica_original, imprimir_nombres_lista_drones, imprimir_lista_mensajes, imprimir_mensajes,  descifrar_mensaje
+from main import cargar_archivo, imprimir_nombres_sistemas_drones, generar_grafica_original, imprimir_nombres_lista_drones, imprimir_lista_mensajes, imprimir_mensajes,  Crear_instrucciones_mensaje, generar_grafica_instrucciones_dron, encontrar_tiempo_optimo, rellenar_nodos_tiempo_optimo
 from lista_sistema_drones import lista_sistema_drones
 from lista_drones import lista_drones
 from dron import dron
 from lista_mensaje import lista_mensaje
+from lista_contenido_m import lista_contenido_m
 
 
 class Pantalla_principal():
@@ -45,6 +46,7 @@ class Pantalla_principal():
         self.lista = lista_sistema_drones()
         self.lista_drones = lista_drones()
         self.lista_mensajes = lista_mensaje()
+        self.lista_contenido_m = lista_contenido_m()
 
         # encabezado de cuadro de texto de entrada
         Label(self.Frame, text="Sistema de drones", font=(
@@ -274,13 +276,34 @@ class Pantalla_principal():
                     contadorAux += 1
                     if nombre_mensaje == str(contadorAux):
                         mensaje_select = actual.mensaje.sistemaDrones
+                        nombreM_select = actual.mensaje.nombre
+
                         lista_instrucciones_select = actual.mensaje.lista_instruccion
                         # lista_sistema_temporal.calcular_los_patrones(str(actual.sistema_drones.nombre))
                     actual = actual.siguiente
 
+                # El usuario selecciona donde guardar la grafica
+                direccion_grafica2 = filedialog.asksaveasfilename(
+                    filetypes=[("Archivos de texto", "*.dot"),
+                               ("Todos los archivos", "*.*")],
+                    title="Guardar archivo como", initialfile="Mensaje")
+
                 # Se llama la funcion para descifrar el mensaje
-                descifrar_mensaje(mensaje_select, self.lista,
-                                  lista_instrucciones_select)
+                Crear_instrucciones_mensaje(mensaje_select, self.lista,
+                                            lista_instrucciones_select, self.lista_contenido_m)
+
+                # Se optiene el tiempo optimo
+                tiempoOptimo = encontrar_tiempo_optimo(self.lista_contenido_m)
+
+                # Se genera la grafica
+                rellenar_nodos_tiempo_optimo(
+                    self.lista_contenido_m, tiempoOptimo)
+
+                generar_grafica_instrucciones_dron(
+                    mensaje_select, nombreM_select, tiempoOptimo, self.lista_contenido_m, direccion_grafica2)
+
+                # self.lista_contenido_m.recorrer_e_imprimir_lista()
+
                 self.botonMensaje = False
 
                 messagebox.showinfo(
@@ -422,7 +445,8 @@ class Pantalla_principal():
                 # Elimina contenido del cuadro
                 self.text.delete(1.0, "end")
 
-                l = imprimir_mensajes(self.lista_mensajes)
+                l = imprimir_mensajes(
+                    self.lista_mensajes, self.lista)
 
                 # set contenido
                 self.text.insert(1.0, l)

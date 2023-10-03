@@ -33,17 +33,17 @@ class lista_contenido_m:
             actual = actual.siguiente
         print("============================================================")
 
-    def graficar(self, nombre_sistema, sistema_drones, TiempoOptimo):
+    def graficar_mensajeM(self, nombre_mensaje, sistema_drones, TiempoOptimo):
         # f = open('bb.dot', 'w')
         # variable que conmtiene la configuración del grafo
         # se crea el subgrafo primero
         text = """
 digraph G {
 subgraph {
-nodo_00[label=" """+nombre_sistema+""" ",fontcolor="#000000",fillcolor=gold, style=filled,shape=box];
-nodo_01_left[label="Altura maxima\\n"""+sistema_drones+"""",fontcolor="#000000",fillcolor=gold, style=filled,shape=box];
+nodo_00[label=" """+nombre_mensaje+""" ",fontcolor="#000000",fillcolor=gold, style=filled,shape=box];
+nodo_01_left[label="Sistema drones\\n"""+sistema_drones+"""",fontcolor="#000000",fillcolor=gold, style=filled,shape=box];
 nodo_00 -> nodo_01_left;
-nodo_01_right[label="Cantidad drones\\n"""+TiempoOptimo+"""",fontcolor="#000000",fillcolor=gold, style=filled,shape=box];
+nodo_01_right[label="Tiempo optimo\n"""+TiempoOptimo+"""",fontcolor="#000000",fillcolor=gold, style=filled,shape=box];
 nodo_00 -> nodo_01_right;
 }
 
@@ -55,7 +55,7 @@ a0 [shape=none label=<
             """
 
         # Primero se deben de graficar las alturas tomando en cuenta la tiempo maxima
-        contador = int(sistema_drones)+1
+        contador = int(TiempoOptimo)+1
         actual = self.primero
         # for que use el contador
         for i in range(contador):
@@ -71,13 +71,13 @@ a0 [shape=none label=<
 
         actual = self.primero
         # iniciaria en 1, verifica si se cambio de linea
-        sentinela_de_filas = actual.contenido_m.dron.nombre
+        sentinela_de_filas = actual.contenido_m.dron
         fila_iniciada = False  # para saber si se inicio una nueva fila
 
         while actual != None:
             # Si el dron actual es diferente al que viene, ej: DronX y el siguiente es DronY
-            if sentinela_de_filas != actual.contenido_m.dron.nombre:
-                sentinela_de_filas = actual.contenido_m.dron.nombre
+            if sentinela_de_filas != actual.contenido_m.dron:
+                sentinela_de_filas = actual.contenido_m.dron
                 # aun no se inicia una nueva fila por lo que es False
                 fila_iniciada = False
                 # Cerramos la fila
@@ -89,22 +89,29 @@ a0 [shape=none label=<
                 # Abrimos la fila
                 text += """<TR>"""
                 text += """<TD border="3"  bgcolor="orangered" gradientangle="315">""" + \
-                    str(actual.contenido_m.dron.nombre)+"""</TD>\n"""
+                    str(actual.contenido_m.dron)+"""</TD>\n"""
 
-                # Lista de alturas
+                # Lista de tiempos
                 actualL = actual.contenido_m.lista_tiempo.primero
                 while actualL != None:
 
-                    text += """<TD border="3"  bgcolor="orangered" gradientangle="315">""" + \
-                        str(actualL.tiempo.accion) + \
-                        """</TD>\n"""
+                    if actualL.tiempo.accion == "Emitir luz":
+
+                        text += """<TD border="3"  bgcolor="gold" gradientangle="315">""" + \
+                            str(actualL.tiempo.accion) + \
+                            """</TD>\n"""
+                    else:
+
+                        text += """<TD border="3"  bgcolor="orangered" gradientangle="315">""" + \
+                            str(actualL.tiempo.accion) + \
+                            """</TD>\n"""
 
                     actualL = actualL.siguiente
 
             # Si no se da ninguno de los csos anteriores entonces secagrega una contenido_m con el TD
             else:
                 text += """<TD border="3"  bgcolor="orangered" gradientangle="315">""" + \
-                    str(actual.contenido_m.dron.nombre)+"""</TD>\n"""
+                    str(actual.contenido_m.dron)+"""</TD>\n"""
 
             actual = actual.siguiente
 

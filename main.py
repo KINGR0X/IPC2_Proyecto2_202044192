@@ -20,6 +20,7 @@ from lista_contenido_m import lista_contenido_m
 from contenido_m import contenido_m
 from tiempo import tiempo
 from lista_tiempo import lista_tiempo
+# from lista_contenido_m import graficar_mensajeM
 
 
 def cargar_archivo(lista_dron, lista_sistemas, lista_mensajes):
@@ -161,6 +162,20 @@ def generar_grafica_original(nombreSignal, lista_sistema_temporal, direccion_gra
     os.system("""dot -Tpng """+nombre+""" -o """+nombreOriginal+""".png""")
 
 
+def generar_grafica_instrucciones_dron(sistema_drones, nombreM_select, tiempoOptimo, lista_contenidoM, direccion_grafica2):
+
+    nombreOriginal = direccion_grafica2+"_original"
+    nombre = nombreOriginal+".dot"
+    f = open(nombre, 'w')
+    # se guara todo el texto y se cierra el archivo
+    f.write(str(lista_contenidoM.graficar_mensajeM(
+        nombreM_select, sistema_drones, str(tiempoOptimo))))
+    f.close()
+    os.environ["PATH"] += os.pathsep + 'C:/Program Files/Graphviz/bin'
+    # se pasa el archivo a png
+    os.system("""dot -Tpng """+nombre+""" -o """+nombreOriginal+""".png""")
+
+
 def imprimir_nombres_lista_drones(lista_drones_temporal):
     # variable para guardar los nombres de los sistemas de drones
     listaDrones = "Listado de drones \n"
@@ -222,6 +237,51 @@ def imprimir_mensajes(lista_mensajes):
 
 # === descifrar mensaje ===
 def descifrar_mensaje(mensaje_seleccionado, lista_sistema_drones, lista_instrucciones_select):
+
+    # === Se busca en la lista_sistema_drones el sistema de drones que se seleccionó ===
+    print("Sistema de drones del mensaje seleccionado:", mensaje_seleccionado)
+
+    actual = lista_sistema_drones.primero
+    while actual != None:
+        if actual.sistema_drones.nombre == mensaje_seleccionado:
+            # Se guarda el sistema de drones que se seleccionó
+            sistema_drones_seleccionado = actual.sistema_drones
+            print
+            break
+        actual = actual.siguiente
+
+    # Se descifra el mensaje
+    # Primero se convierte las instrucciones de lista_instrucciones_select a la letra que corresponde a cada altura del dron de la lista_sistema_drones
+
+    # Se recorre la lista de instrucciones
+    actual = lista_instrucciones_select.primero
+    while actual != None:
+        print("Dron: ", actual.instruccion.dron)
+        print("Altura: ", actual.instruccion.altura)
+        # Se recorre la lista de contenido del sistema de drones seleccionado
+        actual2 = sistema_drones_seleccionado.lista_contenido.primero
+        while actual2 != None:
+            # Se verifica si el dron de la lista de instrucciones es igual al dron de la lista de contenido
+            if actual.instruccion.dron == actual2.contenido.dron.nombre:
+                # Se recorre la lista de alturas del dron seleccionado
+                actual3 = actual2.contenido.lista_altura.primero
+                while actual3 != None:
+                    # Se verifica si el valor de la instrucción es igual al valor de la altura
+                    if actual.instruccion.altura == actual3.altura.valor:
+                        # Se guarda la letra de la altura
+                        actual.instruccion.altura = actual3.altura.letra
+                        print("Letra descifrada:", actual.instruccion.altura)
+                        break
+                    actual3 = actual3.siguiente
+                break
+            actual2 = actual2.siguiente
+
+        actual = actual.siguiente
+
+
+# === Sirve para  llenar la lista de lista_contenido_m===
+def Crear_instrucciones_mensaje(mensaje_seleccionado, lista_sistema_drones, lista_instrucciones_select, lista_contenidoM):
+
     lista_contenido_m_temporal = lista_contenido_m()
     tiempo_anterior = 0
 
@@ -234,7 +294,7 @@ def descifrar_mensaje(mensaje_seleccionado, lista_sistema_drones, lista_instrucc
         if actual.sistema_drones.nombre == mensaje_seleccionado:
             # Se guarda el sistema de drones que se seleccionó
             sistema_drones_seleccionado = actual.sistema_drones
-            print
+            # print
             break
         actual = actual.siguiente
 
@@ -259,7 +319,7 @@ def descifrar_mensaje(mensaje_seleccionado, lista_sistema_drones, lista_instrucc
             if actual.instruccion.dron == actual2.contenido.dron.nombre:
 
                 # === Se verifica si es una nueva instruccion ara un dron que ya recibio una instruccion ===
-                actualComprobar = lista_contenido_m_temporal.primero
+                actualComprobar = lista_contenidoM.primero
                 while actualComprobar != None:
 
                     if actual.instruccion.dron == actualComprobar.contenido_m.dron:
@@ -279,14 +339,14 @@ def descifrar_mensaje(mensaje_seleccionado, lista_sistema_drones, lista_instrucc
                             # print("Altura: ", actual.instruccion.altura)
 
                             # === Se agregan los nuevos nodos ===
-                            actual5 = lista_contenido_m_temporal.primero
+                            actual5 = lista_contenidoM.primero
                             while actual5 != None:
                                 if actual5.contenido_m.dron == actual.instruccion.dron:
 
                                     # === Se verifica si debe de subir o bajar el dron ===
                                     if actual.instruccion.altura > actual4.instruccion.altura:
                                         # se recupera la lista y se le debe de agregar los nuevos movimientos
-                                        lista_contenido_m_temporal
+                                        lista_contenidoM
 
                                         cantidadBajar = int(
                                             actual4.instruccion.altura) - int(actual.instruccion.altura)
@@ -312,7 +372,7 @@ def descifrar_mensaje(mensaje_seleccionado, lista_sistema_drones, lista_instrucc
                                     else:
 
                                         # se recupera la lista y se le debe de agregar los nuevos movimientos
-                                        lista_contenido_m_temporal
+                                        lista_contenidoM
 
                                         cantidadBajar = int(
                                             actual4.instruccion.altura) - int(actual.instruccion.altura)
@@ -394,7 +454,7 @@ def descifrar_mensaje(mensaje_seleccionado, lista_sistema_drones, lista_instrucc
 
         # === If para evitar que cuando se le pasa una nueva instruccion a un dron no cree un nodo solo con el nombre del dron ===
         if nuevaInstruccionParaDron == False:
-            lista_contenido_m_temporal.insertar_dato(contenido_m(
+            lista_contenidoM.insertar_dato(contenido_m(
                 actual.instruccion.dron, lista_tiempo_temporal))
             nuevaInstruccionParaDron = False
 
@@ -402,4 +462,53 @@ def descifrar_mensaje(mensaje_seleccionado, lista_sistema_drones, lista_instrucc
 
         actual = actual.siguiente
 
-    lista_contenido_m_temporal.recorrer_e_imprimir_lista()
+
+# === Encontrar tiempo optimo de la lista de lista_contenido_m y rellenar espacios con ESPERAR===
+
+def encontrar_tiempo_optimo(lista_contenidoM):
+
+    # === Se recorre la lista de lista_contenido_m ===
+    actual = lista_contenidoM.primero
+    tiempo_optimo = 0
+    while actual != None:
+
+        # === Se recorre la lista de tiempos de cada dron ===
+        # y se busca el que tenga mayor cantidad de nodos
+
+        contador_actual = actual.contenido_m.lista_tiempo.contador_celdas
+
+        if contador_actual > tiempo_optimo:
+            tiempo_optimo = contador_actual
+        else:
+            tiempo_optimo = contador_anterior
+
+        contador_anterior = actual.contenido_m.lista_tiempo.contador_celdas
+
+        actual = actual.siguiente
+
+    # print(tiempo_optimo)
+    return tiempo_optimo
+
+
+# Se rellenan los espacios con ESPERAR
+def rellenar_nodos_tiempo_optimo(lista_contenidoM, tiempo_optimo):
+
+    # === Se recorre la lista de lista_contenido_m ===
+    actual = lista_contenidoM.primero
+    while actual != None:
+
+        # === Se recorre la lista de tiempos de cada dron ===
+        # y se busca el que tenga mayor cantidad de nodos
+
+        contador_actual = actual.contenido_m.lista_tiempo.contador_celdas
+
+        if contador_actual < tiempo_optimo:
+            # Se crea un ciclo para rellenar los nodos faltantes con ESPERAR
+            for i in range(tiempo_optimo - contador_actual):
+                i += 1
+                # se crea el valor del tiempo
+                tiempo_temporal = tiempo(i, "Esperar")
+                actual.contenido_m.lista_tiempo.insertar_dato(
+                    tiempo_temporal)
+
+        actual = actual.siguiente
