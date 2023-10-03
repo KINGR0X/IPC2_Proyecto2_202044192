@@ -339,7 +339,7 @@ def descifrar_mensaje(mensaje_seleccionado, lista_sistema_drones, lista_instrucc
                                 actual5 = actual5.siguiente
 
                         actual4 = actual4.siguiente
-                        nuevaInstruccionParaDron = False
+                        # nuevaInstruccionParaDron = False
                 else:
                     # === Se recorre cada dron y su lista de alturas  hasta encontrar la letra, al encontrar la letra se emite la luz===
                     actual3 = actual2.contenido.lista_altura.primero
@@ -392,8 +392,11 @@ def descifrar_mensaje(mensaje_seleccionado, lista_sistema_drones, lista_instrucc
                     break
             actual2 = actual2.siguiente
 
-        lista_contenido_m_temporal.insertar_dato(contenido_m(
-            actual.instruccion.dron, lista_tiempo_temporal))
+        # === If para evitar que cuando se le pasa una nueva instruccion a un dron no cree un nodo solo con el nombre del dron ===
+        if nuevaInstruccionParaDron == False:
+            lista_contenido_m_temporal.insertar_dato(contenido_m(
+                actual.instruccion.dron, lista_tiempo_temporal))
+            nuevaInstruccionParaDron = False
 
         contador_tiempo = 0
 
