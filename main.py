@@ -287,21 +287,24 @@ def descifrar_mensaje_salida(lista_mensajes, drones_salidaM, lista_sistema_drone
                     actual3 = actual3.siguiente
             actual2 = actual2.siguiente
 
-        # se le pasa la lista_contenidoM de la lista de drones_salidaM
+        # se le pasa la lista_contenidoM de la lista de drones_salidaM para que se pueda llenar
         lista_contenidoM = lista_contenido_m()
         Crear_instrucciones_mensaje(
             mensaje_seleccionado, lista_sistema_drones, lista_instrucciones_select, lista_contenidoM)
 
+        # Se encuentra el tiempo optimo
+        tiempoOp = encontrar_tiempo_optimo(lista_contenidoM)
+
+        # Se rellenan los nodos con ESPERAR
+        rellenar_nodos_tiempo_optimo(lista_contenidoM, tiempoOp)
+
         # print(mensaje_descifrado)
         datosMensaje = drones_salida(actual.mensaje.nombre, actual.mensaje.sistemaDrones,
-                                     "tiempoOptimo", mensaje_descifrado, lista_contenidoM)
+                                     tiempoOp, mensaje_descifrado, lista_contenidoM)
 
         drones_salidaM.insertar_dato(datosMensaje)
 
         actual = actual.siguiente
-
-    # Se descifra el mensaje
-    # Primero se convierte las instrucciones de lista_instrucciones_select a la letra que corresponde a cada altura del dron de la lista_sistema_drones
 
 
 # === Sirve para  llenar la lista de lista_contenido_m===
@@ -367,6 +370,7 @@ def Crear_instrucciones_mensaje(mensaje_seleccionado, lista_sistema_drones, list
                             actual5 = lista_contenidoM.primero
                             while actual5 != None:
                                 if actual5.contenido_m.dron == actual.instruccion.dron:
+                                    contador_celdas = actual5.contenido_m.lista_tiempo.contador_celdas
 
                                     # === Se verifica si debe de subir o bajar el dron ===
                                     if actual.instruccion.altura > actual4.instruccion.altura:
@@ -382,7 +386,7 @@ def Crear_instrucciones_mensaje(mensaje_seleccionado, lista_sistema_drones, list
                                             contador_tiempo += 1
                                             # se crea el valor del tiempo
                                             tiempo_temporal = tiempo(
-                                                contador_tiempo, "Subir")
+                                                contador_tiempo+contador_celdas, "Subir")
 
                                             actual5.contenido_m.lista_tiempo.insertar_dato(
                                                 tiempo_temporal)
@@ -390,7 +394,7 @@ def Crear_instrucciones_mensaje(mensaje_seleccionado, lista_sistema_drones, list
                                         contador_tiempo += 1
                                         # se crea el valor del tiempo
                                         tiempo_temporal = tiempo(
-                                            contador_tiempo, "Emitir luz")
+                                            contador_tiempo+contador_celdas, "Emitir luz")
 
                                         actual5.contenido_m.lista_tiempo.insertar_dato(
                                             tiempo_temporal)
@@ -408,7 +412,7 @@ def Crear_instrucciones_mensaje(mensaje_seleccionado, lista_sistema_drones, list
                                             contador_tiempo += 1
                                             # se crea el valor del tiempo
                                             tiempo_temporal = tiempo(
-                                                contador_tiempo, "Bajar")
+                                                contador_tiempo+contador_celdas, "Bajar")
 
                                             actual5.contenido_m.lista_tiempo.insertar_dato(
                                                 tiempo_temporal)
@@ -416,7 +420,7 @@ def Crear_instrucciones_mensaje(mensaje_seleccionado, lista_sistema_drones, list
                                         contador_tiempo += 1
                                         # se crea el valor del tiempo
                                         tiempo_temporal = tiempo(
-                                            contador_tiempo, "Emitir luz")
+                                            contador_tiempo+contador_celdas, "Emitir luz")
 
                                         actual5.contenido_m.lista_tiempo.insertar_dato(
                                             tiempo_temporal)
@@ -528,11 +532,12 @@ def rellenar_nodos_tiempo_optimo(lista_contenidoM, tiempo_optimo):
         contador_actual = actual.contenido_m.lista_tiempo.contador_celdas
 
         if contador_actual < tiempo_optimo:
+
             # Se crea un ciclo para rellenar los nodos faltantes con ESPERAR
             for i in range(tiempo_optimo - contador_actual):
                 i += 1
                 # se crea el valor del tiempo
-                tiempo_temporal = tiempo(i, "Esperar")
+                tiempo_temporal = tiempo(i+contador_actual, "Esperar")
                 actual.contenido_m.lista_tiempo.insertar_dato(
                     tiempo_temporal)
 

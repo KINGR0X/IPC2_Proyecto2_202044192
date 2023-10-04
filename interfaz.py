@@ -297,9 +297,9 @@ class Pantalla_principal():
                 # Se optiene el tiempo optimo
                 tiempoOptimo = encontrar_tiempo_optimo(self.lista_contenido_m)
 
-                # Se genera la grafica
-                rellenar_nodos_tiempo_optimo(
-                    self.lista_contenido_m, tiempoOptimo)
+                # # Se genera la grafica
+                # rellenar_nodos_tiempo_optimo(
+                #     self.lista_contenido_m, tiempoOptimo)
 
                 # descifrar_mensaje(
                 #     self.lista_mensajes, self.lista, lista_instrucciones_select)
@@ -451,16 +451,6 @@ class Pantalla_principal():
                     self.lista_mensajes, self.drones_salidaM, self.lista)
 
                 self.drones_salidaM.recorrer_e_imprimir_lista()
-
-                # # Se optiene el tiempo optimo
-                # tiempoOptimo = encontrar_tiempo_optimo(self.lista_contenido_m)
-
-                # # Se genera la grafica
-                # rellenar_nodos_tiempo_optimo(
-                #     self.lista_contenido_m, tiempoOptimo)
-
-                # descifrar_mensaje(
-                #     self.lista_mensajes, self.lista, lista_instrucciones_select)
 
                 self.botonMensaje = True
                 # Elimina contenido del cuadro
