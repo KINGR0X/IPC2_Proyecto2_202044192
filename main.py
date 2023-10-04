@@ -20,6 +20,8 @@ from lista_contenido_m import lista_contenido_m
 from contenido_m import contenido_m
 from tiempo import tiempo
 from lista_tiempo import lista_tiempo
+from drones_salida import drones_salida
+from lista_drones_salida import lista_drones_salida
 # from lista_contenido_m import graficar_mensajeM
 
 
@@ -236,10 +238,13 @@ def imprimir_mensajes(lista_mensajes):
 
 
 # === descifrar mensaje ===
-def descifrar_mensaje(mensaje_seleccionado, lista_sistema_drones, lista_instrucciones_select):
+def descifrar_mensaje(lista_mensajes, lista_sistema_drones, lista_instrucciones_select):
 
-    # === Se busca en la lista_sistema_drones el sistema de drones que se seleccionó ===
-    print("Sistema de drones del mensaje seleccionado:", mensaje_seleccionado)
+    # === Imprimir las señales que hay en el archivo ===
+    actual = lista_mensajes.primero
+    while actual != None:
+        mensaje_seleccionado = actual.mensaje.sistemaDrones
+        actual = actual.siguiente
 
     actual = lista_sistema_drones.primero
     while actual != None:
@@ -277,6 +282,67 @@ def descifrar_mensaje(mensaje_seleccionado, lista_sistema_drones, lista_instrucc
             actual2 = actual2.siguiente
 
         actual = actual.siguiente
+
+
+# === descifrar mensaje ===
+def descifrar_mensaje_salida(lista_mensajes, drones_salidaM, lista_sistema_drones):
+
+    # === Se recorre la lista mensaje para ejecutar las instrucciones que indica ===
+    actual = lista_mensajes.primero
+    while actual != None:
+
+        # con el sistema drones que indica el mensaje, se busca en la lista_sistema_drones el sistema de drones que se seleccionó
+        mensaje_seleccionado = actual.mensaje.sistemaDrones
+
+        mensaje_descifrado = ""
+        actual2 = lista_sistema_drones.primero
+        while actual2 != None:
+
+            if actual2.sistema_drones.nombre == mensaje_seleccionado:
+                # Se guarda el sistema de drones que se seleccionó
+                sistema_drones_seleccionado = actual2.sistema_drones
+                lista_instrucciones_select = actual.mensaje.lista_instruccion
+
+                # Se recorre la lista de instrucciones ej: dron="DronW" (1)
+
+                actual3 = lista_instrucciones_select.primero
+                while actual3 != None:
+                    # print("Dron: ", actual3.instruccion.dron)
+                    # print("Altura: ", actual3.instruccion.altura)
+
+                    # Se recorre la lista de contenido del sistema de drones seleccionado
+                    actual4 = sistema_drones_seleccionado.lista_contenido.primero
+                    while actual4 != None:
+
+                        # Se verifica si el dron de la lista de instrucciones es igual al dron de la lista de contenido
+                        if actual3.instruccion.dron == actual4.contenido.dron.nombre:
+
+                            # Se recorre la lista de alturas del dron seleccionado
+                            actuald = actual4.contenido.lista_altura.primero
+                            while actuald != None:
+                                # Se verifica si el valor de la instrucción es igual al valor de la altura
+                                if actual3.instruccion.altura == actuald.altura.valor:
+                                    # Se guarda la letra de la altura
+                                    mensaje_descifrado += actuald.altura.letra
+                                    # print("Letra descifrada:",
+                                    #       actuald.altura.letra)
+                                    break
+                                actuald = actuald.siguiente
+                            break
+                        actual4 = actual4.siguiente
+
+                    actual3 = actual3.siguiente
+            actual2 = actual2.siguiente
+
+        # print(mensaje_descifrado)
+        datosMensaje = drones_salida(actual.mensaje.nombre, actual.mensaje.sistemaDrones,
+                                     "tiempoOptimo", mensaje_descifrado)
+        drones_salidaM.insertar_dato(datosMensaje)
+
+        actual = actual.siguiente
+
+    # Se descifra el mensaje
+    # Primero se convierte las instrucciones de lista_instrucciones_select a la letra que corresponde a cada altura del dron de la lista_sistema_drones
 
 
 # === Sirve para  llenar la lista de lista_contenido_m===
