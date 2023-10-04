@@ -337,6 +337,7 @@ class Pantalla_principal():
             try:
                 # si se presiono antes el boton de nuevo dron se desactiva
                 self.botonNuevoDron = False
+                self.botonMensaje = False
 
                 # Elimina contenido del cuadro
                 self.text.delete(1.0, "end")
@@ -389,6 +390,7 @@ class Pantalla_principal():
             try:
                 # si se presiono antes el boton de graficar contenido se desactiva
                 self.botonGraficaContenido = False
+                self.botonMensaje = False
 
                 self.botonNuevoDron = True
                 # Elimina contenido del cuadro
@@ -437,6 +439,9 @@ class Pantalla_principal():
         if self.analizado == True:
 
             try:
+                # si se presiono antes el boton de graficar contenido se desactiva
+                self.botonGraficaContenido = False
+                self.botonNuevoDron = False
 
                 self.botonMensaje = True
 
