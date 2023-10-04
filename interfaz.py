@@ -9,7 +9,7 @@ from tkinter import messagebox
 from tkinter import scrolledtext
 from tkinter.filedialog import asksaveasfilename
 import os
-from main import cargar_archivo, imprimir_nombres_sistemas_drones, generar_grafica_original, imprimir_nombres_lista_drones, imprimir_lista_mensajes, imprimir_mensajes,  Crear_instrucciones_mensaje, generar_grafica_instrucciones_dron, encontrar_tiempo_optimo, rellenar_nodos_tiempo_optimo, descifrar_mensaje, descifrar_mensaje_salida
+from main import cargar_archivo, imprimir_nombres_sistemas_drones, generar_grafica_original, imprimir_nombres_lista_drones, imprimir_lista_mensajes, imprimir_mensajes,  Crear_instrucciones_mensaje, generar_grafica_instrucciones_dron, encontrar_tiempo_optimo, rellenar_nodos_tiempo_optimo, descifrar_mensaje_salida
 from lista_sistema_drones import lista_sistema_drones
 from lista_drones import lista_drones
 from dron import dron
@@ -301,8 +301,8 @@ class Pantalla_principal():
                 rellenar_nodos_tiempo_optimo(
                     self.lista_contenido_m, tiempoOptimo)
 
-                descifrar_mensaje(
-                    self.lista_mensajes, self.lista, lista_instrucciones_select)
+                # descifrar_mensaje(
+                #     self.lista_mensajes, self.lista, lista_instrucciones_select)
 
                 # generar_grafica_instrucciones_dron(
                 #     mensaje_select, nombreM_select, tiempoOptimo, self.lista_contenido_m, direccion_grafica2)
@@ -451,10 +451,6 @@ class Pantalla_principal():
                     self.lista_mensajes, self.drones_salidaM, self.lista)
 
                 self.drones_salidaM.recorrer_e_imprimir_lista()
-
-                # # Se llama la funcion para descifrar el mensaje
-                # Crear_instrucciones_mensaje(mensaje_select, self.lista,
-                #                             lista_instrucciones_select, self.lista_contenido_m)
 
                 # # Se optiene el tiempo optimo
                 # tiempoOptimo = encontrar_tiempo_optimo(self.lista_contenido_m)

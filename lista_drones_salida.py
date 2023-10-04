@@ -32,7 +32,7 @@ class lista_drones_salida:
                   actual.drones_salida.mensaje_desencriptado)
 
             # actual.drones_salida.lista_drones.recorrer_e_imprimir_lista()
-            # actual.drones_salida.lista_contenido.recorrer_e_imprimir_lista()
+            actual.drones_salida.lista_contenido_m.recorrer_e_imprimir_lista()
             actual = actual.siguiente
             print("")
         print("============================================================")

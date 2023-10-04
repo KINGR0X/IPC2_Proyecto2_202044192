@@ -238,53 +238,6 @@ def imprimir_mensajes(lista_mensajes):
 
 
 # === descifrar mensaje ===
-def descifrar_mensaje(lista_mensajes, lista_sistema_drones, lista_instrucciones_select):
-
-    # === Imprimir las señales que hay en el archivo ===
-    actual = lista_mensajes.primero
-    while actual != None:
-        mensaje_seleccionado = actual.mensaje.sistemaDrones
-        actual = actual.siguiente
-
-    actual = lista_sistema_drones.primero
-    while actual != None:
-        if actual.sistema_drones.nombre == mensaje_seleccionado:
-            # Se guarda el sistema de drones que se seleccionó
-            sistema_drones_seleccionado = actual.sistema_drones
-            print
-            break
-        actual = actual.siguiente
-
-    # Se descifra el mensaje
-    # Primero se convierte las instrucciones de lista_instrucciones_select a la letra que corresponde a cada altura del dron de la lista_sistema_drones
-
-    # Se recorre la lista de instrucciones
-    actual = lista_instrucciones_select.primero
-    while actual != None:
-        print("Dron: ", actual.instruccion.dron)
-        print("Altura: ", actual.instruccion.altura)
-        # Se recorre la lista de contenido del sistema de drones seleccionado
-        actual2 = sistema_drones_seleccionado.lista_contenido.primero
-        while actual2 != None:
-            # Se verifica si el dron de la lista de instrucciones es igual al dron de la lista de contenido
-            if actual.instruccion.dron == actual2.contenido.dron.nombre:
-                # Se recorre la lista de alturas del dron seleccionado
-                actual3 = actual2.contenido.lista_altura.primero
-                while actual3 != None:
-                    # Se verifica si el valor de la instrucción es igual al valor de la altura
-                    if actual.instruccion.altura == actual3.altura.valor:
-                        # Se guarda la letra de la altura
-                        actual.instruccion.altura = actual3.altura.letra
-                        print("Letra descifrada:", actual.instruccion.altura)
-                        break
-                    actual3 = actual3.siguiente
-                break
-            actual2 = actual2.siguiente
-
-        actual = actual.siguiente
-
-
-# === descifrar mensaje ===
 def descifrar_mensaje_salida(lista_mensajes, drones_salidaM, lista_sistema_drones):
 
     # === Se recorre la lista mensaje para ejecutar las instrucciones que indica ===
@@ -334,9 +287,15 @@ def descifrar_mensaje_salida(lista_mensajes, drones_salidaM, lista_sistema_drone
                     actual3 = actual3.siguiente
             actual2 = actual2.siguiente
 
+        # se le pasa la lista_contenidoM de la lista de drones_salidaM
+        lista_contenidoM = lista_contenido_m()
+        Crear_instrucciones_mensaje(
+            mensaje_seleccionado, lista_sistema_drones, lista_instrucciones_select, lista_contenidoM)
+
         # print(mensaje_descifrado)
         datosMensaje = drones_salida(actual.mensaje.nombre, actual.mensaje.sistemaDrones,
-                                     "tiempoOptimo", mensaje_descifrado)
+                                     "tiempoOptimo", mensaje_descifrado, lista_contenidoM)
+
         drones_salidaM.insertar_dato(datosMensaje)
 
         actual = actual.siguiente
