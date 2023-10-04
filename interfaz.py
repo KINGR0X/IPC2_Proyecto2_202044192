@@ -138,19 +138,19 @@ class Pantalla_principal():
             textvariable=self.ingresoDato, width=39, font=("Times New Roman", 14))
 
         # posicionamiento del cuadro de entrada
-        self.ingresoDato_entry.place(x=30, y=310)
+        self.ingresoDato_entry.place(x=140, y=390)
 
         # Botón para guardar el texto que ingreso el usuario
         self.botonGuardar = Button(
             self.pp, text="Guardar", command=self.guardar_dato, width="10", height="3", bg="white")
 
-        self.botonGuardar.place(x=170, y=345)
+        self.botonGuardar.place(x=275, y=420)
 
         # cuadro de texto
         self.textContainer = Frame(self.pp, borderwidth=1, relief="sunken")
 
         self.text = Text(self.textContainer, font=(
-            "Times New Roman", 15), fg='white', bg="#444654", width=55, height=10, wrap="none")
+            "Times New Roman", 15), fg='white', bg="#444654", width=57, height=14, wrap="none")
 
         textVsb = Scrollbar(
             self.textContainer, orient="vertical", command=self.text.yview)
@@ -290,24 +290,9 @@ class Pantalla_principal():
                                ("Todos los archivos", "*.*")],
                     title="Guardar archivo como", initialfile="Mensaje")
 
-                # Se llama la funcion para descifrar el mensaje
-                Crear_instrucciones_mensaje(mensaje_select, self.lista,
-                                            lista_instrucciones_select, self.lista_contenido_m)
-
-                # Se optiene el tiempo optimo
-                tiempoOptimo = encontrar_tiempo_optimo(self.lista_contenido_m)
-
-                # # Se genera la grafica
-                # rellenar_nodos_tiempo_optimo(
-                #     self.lista_contenido_m, tiempoOptimo)
-
-                # descifrar_mensaje(
-                #     self.lista_mensajes, self.lista, lista_instrucciones_select)
-
-                # generar_grafica_instrucciones_dron(
-                #     mensaje_select, nombreM_select, tiempoOptimo, self.lista_contenido_m, direccion_grafica2)
-
-                # self.lista_contenido_m.recorrer_e_imprimir_lista()
+                # Se genera la grafica
+                generar_grafica_instrucciones_dron(
+                    nombreM_select, self.drones_salidaM, direccion_grafica2)
 
                 self.botonMensaje = False
 
@@ -329,6 +314,11 @@ class Pantalla_principal():
         try:
             cargar_archivo(self.lista_drones, self.lista, self.lista_mensajes)
             self.analizado = True
+
+            # Solo despues de caragar un archivo se desigran los mensajes, y se crean la lista de instrucciones
+            descifrar_mensaje_salida(
+                self.lista_mensajes, self.drones_salidaM, self.lista)
+
             messagebox.showinfo(
                 "Carga de archivo", "Archivo cargado con exito")
             # Elimina contenido del cuadro
@@ -447,17 +437,13 @@ class Pantalla_principal():
 
             try:
 
-                descifrar_mensaje_salida(
-                    self.lista_mensajes, self.drones_salidaM, self.lista)
-
-                self.drones_salidaM.recorrer_e_imprimir_lista()
-
                 self.botonMensaje = True
+
                 # Elimina contenido del cuadro
                 self.text.delete(1.0, "end")
 
                 l = imprimir_mensajes(
-                    self.lista_mensajes)
+                    self.drones_salidaM)
 
                 # set contenido
                 self.text.insert(1.0, l)

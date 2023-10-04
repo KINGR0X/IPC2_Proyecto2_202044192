@@ -164,14 +164,13 @@ def generar_grafica_original(nombreSignal, lista_sistema_temporal, direccion_gra
     os.system("""dot -Tpng """+nombre+""" -o """+nombreOriginal+""".png""")
 
 
-def generar_grafica_instrucciones_dron(sistema_drones, nombreM_select, tiempoOptimo, lista_contenidoM, direccion_grafica2):
+def generar_grafica_instrucciones_dron(nombre_dronesM, lista_salidaM, direccion_grafica2):
 
     nombreOriginal = direccion_grafica2+"_original"
     nombre = nombreOriginal+".dot"
     f = open(nombre, 'w')
     # se guara todo el texto y se cierra el archivo
-    f.write(str(lista_contenidoM.graficar_mensajeM(
-        nombreM_select, sistema_drones, str(tiempoOptimo))))
+    f.write(str(lista_salidaM.graficar_salida(nombre_dronesM)))
     f.close()
     os.environ["PATH"] += os.pathsep + 'C:/Program Files/Graphviz/bin'
     # se pasa el archivo a png
@@ -217,18 +216,24 @@ def imprimir_lista_mensajes(lista_mensajes):
 
 
 # === Imprimir solo el mensaje ===
-def imprimir_mensajes(lista_mensajes):
-
+def imprimir_mensajes(lista_salidaM):
     # variable para guardar los nombres de los sistemas de drones
-    listaDrones = "Escoja un mensaje para mostrar \n"
+    listaDrones = "Escoja un mensaje para mostrar (ingrese el numero del mensaje) \n"
     contador = 1
     # === Imprimir las señales que hay en el archivo ===
-    actual = lista_mensajes.primero
+    actual = lista_salidaM.primero
     while actual != None:
         listaDrones += "\n"
-        listaDrones += str(contador)+". "+"Nombre: " + actual.mensaje.nombre
+        listaDrones += str(contador)+". "+"Nombre: " + \
+            actual.drones_salida.NombreMensaje
         listaDrones += "\n"
-        listaDrones += "Sistema de drones: " + actual.mensaje.sistemaDrones
+        listaDrones += "Sistema de drones: " + actual.drones_salida.SistemaDrones
+        listaDrones += "\n"
+        listaDrones += "Tiempo optimo: " + \
+            str(actual.drones_salida.tiempoOptimo)
+        listaDrones += "\n"
+        listaDrones += "Mensaje desencriptado: " + \
+            actual.drones_salida.mensaje_desencriptado
 
         contador += 1
         actual = actual.siguiente
@@ -314,7 +319,7 @@ def Crear_instrucciones_mensaje(mensaje_seleccionado, lista_sistema_drones, list
     tiempo_anterior = 0
 
     # === Se busca en la lista_sistema_drones el sistema de drones que se seleccionó ===
-    print("Sistema de drones del mensaje seleccionado:", mensaje_seleccionado)
+    # print("Sistema de drones del mensaje seleccionado:", mensaje_seleccionado)
 
     # === Se busca en la lista_sistema_drones el sistema de drones que se seleccionó ===
     actual = lista_sistema_drones.primero

@@ -33,7 +33,7 @@ class lista_contenido_m:
             actual = actual.siguiente
         print("============================================================")
 
-    def graficar_mensajeM(self, nombre_mensaje, sistema_drones, TiempoOptimo):
+    def graficar_mensajeM(self, nombre_mensaje, sistema_drones, TiempoOptimo, mensaje_desencriptado):
         # f = open('bb.dot', 'w')
         # variable que conmtiene la configuración del grafo
         # se crea el subgrafo primero
@@ -45,6 +45,8 @@ nodo_01_left[label="Sistema drones\\n"""+sistema_drones+"""",fontcolor="#000000"
 nodo_00 -> nodo_01_left;
 nodo_01_right[label="Tiempo optimo\n"""+TiempoOptimo+"""",fontcolor="#000000",fillcolor=gold, style=filled,shape=box];
 nodo_00 -> nodo_01_right;
+nodo_02_right[label="Mensaje que se enviara\n"""+mensaje_desencriptado+"""",fontcolor="#000000",fillcolor=gold, style=filled,shape=box];
+nodo_00 -> nodo_02_right;
 }
 
 fontname="Helvetica,Arial,sans-serif"
@@ -98,6 +100,12 @@ a0 [shape=none label=<
                     if actualL.tiempo.accion == "Emitir luz":
 
                         text += """<TD border="3"  bgcolor="gold" gradientangle="315">""" + \
+                            str(actualL.tiempo.accion) + \
+                            """</TD>\n"""
+
+                    elif actualL.tiempo.accion == "Esperar":
+
+                        text += """<TD border="3"  bgcolor="cornflowerblue" gradientangle="315">""" + \
                             str(actualL.tiempo.accion) + \
                             """</TD>\n"""
                     else:

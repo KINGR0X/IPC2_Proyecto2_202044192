@@ -40,16 +40,14 @@ class lista_drones_salida:
         print("")
         print("")
 
-    # def graficar_mi_lista_original(self, nombre_signal):
+    def graficar_salida(self, nombre_dronesM):
 
-    #     # Grafica del contenido
-    #     actual = self.primero
-    #     while actual != None:
-    #         if actual.drones_salida.nombre == nombre_signal:
-    #             dot = actual.drones_salida.lista_contenido.graficar(actual.drones_salida.nombre,
-    #                                                                 str(
-    #                                                                     actual.drones_salida.alturaMaxima),
-    #                                                                 str(actual.drones_salida.cantidadDrones))
-    #         # actual.drones_salida.lista_patrones_celdas.recorrer_e_imprimir_lista()
-    #             return dot
-    #         actual = actual.siguiente
+        # Grafica del contenido
+        actual = self.primero
+        while actual != None:
+            if actual.drones_salida.NombreMensaje == nombre_dronesM:
+                dot = actual.drones_salida.lista_contenido_m.graficar_mensajeM(
+                    actual.drones_salida.NombreMensaje, actual.drones_salida.SistemaDrones, str(actual.drones_salida.tiempoOptimo), actual.drones_salida.mensaje_desencriptado)
+            # actual.drones_salida.lista_patrones_celdas.recorrer_e_imprimir_lista()
+                return dot
+            actual = actual.siguiente
