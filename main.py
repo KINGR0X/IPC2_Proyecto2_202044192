@@ -232,7 +232,7 @@ def imprimir_mensajes(lista_salidaM):
         listaDrones += "Tiempo optimo: " + \
             str(actual.drones_salida.tiempoOptimo)
         listaDrones += "\n"
-        listaDrones += "Mensaje desencriptado: " + \
+        listaDrones += "Mensaje que se enviara: " + \
             actual.drones_salida.mensaje_desencriptado
 
         contador += 1

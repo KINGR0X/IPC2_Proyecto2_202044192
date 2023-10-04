@@ -101,10 +101,10 @@ class Pantalla_principal():
         analizarMenu = Menu(self.menubar, tearoff=0)
 
         analizarMenu .add_command(
-            label="Grafica listado sitema de drones", command=self.graficar, font=("Roboto Mono", 13))
+            label="Graficar listado sitema de drones", command=self.graficar, font=("Roboto Mono", 13))
 
         self.menubar.add_cascade(
-            label="Gestión sistema de drones", menu=analizarMenu, font=("Roboto Mono", 13))
+            label="Gestión sistemas de drones", menu=analizarMenu, font=("Roboto Mono", 13))
 
         # === Gestión de mensajes ===
         archivoMenu = Menu(self.menubar, tearoff=0)
@@ -142,7 +142,7 @@ class Pantalla_principal():
 
         # Botón para guardar el texto que ingreso el usuario
         self.botonGuardar = Button(
-            self.pp, text="Guardar", command=self.guardar_dato, width="10", height="3", bg="white")
+            self.pp, text="Aceptar", command=self.guardar_dato, width="10", height="3", bg="white")
 
         self.botonGuardar.place(x=275, y=420)
 
@@ -183,6 +183,7 @@ class Pantalla_principal():
             self.lista = lista_sistema_drones()
             self.lista_drones = lista_drones()
             self.lista_mensajes = lista_mensaje()
+            self.drones_salidaM = lista_drones_salida()
 
             messagebox.showinfo(
                 "Inicialización", "Sistema inicializado con exito")
