@@ -89,10 +89,11 @@ class lista_drones_salida:
                 tiempo = ET.SubElement(
                     instrucciones, "tiempo valor="+"\""+str(i+1)+"\"")
 
+                acciones = ET.SubElement(tiempo, "acciones")
+
                 # dentro del ciclo de los tiempos se hace otro ciclo para recorrer los drones
                 actual2 = actual.drones_salida.lista_contenido_m.primero
                 while actual2 != None:
-                    acciones = ET.SubElement(tiempo, "acciones")
                     dron = ET.SubElement(
                         acciones, "dron nombre="+"\""+actual2.contenido_m.dron+"\"")
 
