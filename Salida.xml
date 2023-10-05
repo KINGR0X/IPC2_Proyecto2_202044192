@@ -1,0 +1,166 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<respuesta>
+  <listaMensajes>
+    <mensaje nombre="msg1">
+      <sistemaDrones>SDF</sistemaDrones>
+      <tiempoOptimo>5</tiempoOptimo>
+      <mensajeRecibido>IPC2</mensajeRecibido>
+      <instrucciones>
+        <tiempo valor="1">
+          <acciones>
+            <dron nombre="DronW">Subir</dron nombre="DronW">
+          </acciones>
+          <acciones>
+            <dron nombre="DronX">Subir</dron nombre="DronX">
+          </acciones>
+          <acciones>
+            <dron nombre="DronY">Subir</dron nombre="DronY">
+          </acciones>
+          <acciones>
+            <dron nombre="DronZ">Subir</dron nombre="DronZ">
+        </acciones>
+        </tiempo valor="1">
+        <tiempo valor="2">
+          <acciones>
+            <dron nombre="DronW">Emitir luz</dron nombre="DronW">
+          </acciones>
+          <acciones>
+            <dron nombre="DronX">Esperar</dron nombre="DronX">
+          </acciones>
+          <acciones>
+            <dron nombre="DronY">Esperar</dron nombre="DronY">
+          </acciones>
+          <acciones>
+            <dron nombre="DronZ">Esperar</dron nombre="DronZ">
+        </acciones>
+        </tiempo valor="2">
+        <tiempo valor="3">
+          <acciones>
+            <dron nombre="DronW">Esperar</dron nombre="DronW">
+          </acciones>
+          <acciones>
+            <dron nombre="DronX">Emitir luz</dron nombre="DronX">
+          </acciones>
+          <acciones>
+            <dron nombre="DronY">Esperar</dron nombre="DronY">
+          </acciones>
+          <acciones>
+            <dron nombre="DronZ">Esperar</dron nombre="DronZ">
+        </acciones>
+        </tiempo valor="3">
+        <tiempo valor="4">
+          <acciones>
+            <dron nombre="DronW">Esperar</dron nombre="DronW">
+          </acciones>
+          <acciones>
+            <dron nombre="DronX">Esperar</dron nombre="DronX">
+          </acciones>
+          <acciones>
+            <dron nombre="DronY">Emitir luz</dron nombre="DronY">
+          </acciones>
+          <acciones>
+            <dron nombre="DronZ">Esperar</dron nombre="DronZ">
+        </acciones>
+        </tiempo valor="4">
+        <tiempo valor="5">
+          <acciones>
+            <dron nombre="DronW">Esperar</dron nombre="DronW">
+          </acciones>
+          <acciones>
+            <dron nombre="DronX">Esperar</dron nombre="DronX">
+          </acciones>
+          <acciones>
+            <dron nombre="DronY">Esperar</dron nombre="DronY">
+          </acciones>
+          <acciones>
+            <dron nombre="DronZ">Emitir luz</dron nombre="DronZ">
+    </acciones>
+    </tiempo valor="5">
+    </instrucciones>
+    </mensaje nombre="msg1">
+    <mensaje nombre="msg2">
+      <sistemaDrones>SD1</sistemaDrones>
+      <tiempoOptimo>7</tiempoOptimo>
+      <mensajeRecibido>IPC2</mensajeRecibido>
+      <instrucciones>
+        <tiempo valor="1">
+          <acciones>
+            <dron nombre="DronX">Subir</dron nombre="DronX">
+          </acciones>
+          <acciones>
+            <dron nombre="DronY">Subir</dron nombre="DronY">
+          </acciones>
+          <acciones>
+            <dron nombre="DronZ">Subir</dron nombre="DronZ">
+        </acciones>
+        </tiempo valor="1">
+        <tiempo valor="2">
+          <acciones>
+            <dron nombre="DronX">Subir</dron nombre="DronX">
+          </acciones>
+          <acciones>
+            <dron nombre="DronY">Subir</dron nombre="DronY">
+          </acciones>
+          <acciones>
+            <dron nombre="DronZ">Subir</dron nombre="DronZ">
+        </acciones>
+        </tiempo valor="2">
+        <tiempo valor="3">
+          <acciones>
+            <dron nombre="DronX">Emitir luz</dron nombre="DronX">
+          </acciones>
+          <acciones>
+            <dron nombre="DronY">Subir</dron nombre="DronY">
+          </acciones>
+          <acciones>
+            <dron nombre="DronZ">Esperar</dron nombre="DronZ">
+        </acciones>
+        </tiempo valor="3">
+        <tiempo valor="4">
+          <acciones>
+            <dron nombre="DronX">Esperar</dron nombre="DronX">
+          </acciones>
+          <acciones>
+            <dron nombre="DronY">Emitir luz</dron nombre="DronY">
+          </acciones>
+          <acciones>
+            <dron nombre="DronZ">Esperar</dron nombre="DronZ">
+        </acciones>
+        </tiempo valor="4">
+        <tiempo valor="5">
+          <acciones>
+            <dron nombre="DronX">Esperar</dron nombre="DronX">
+          </acciones>
+          <acciones>
+            <dron nombre="DronY">Bajar</dron nombre="DronY">
+          </acciones>
+          <acciones>
+            <dron nombre="DronZ">Emitir luz</dron nombre="DronZ">
+        </acciones>
+        </tiempo valor="5">
+        <tiempo valor="6">
+          <acciones>
+            <dron nombre="DronX">Esperar</dron nombre="DronX">
+          </acciones>
+          <acciones>
+            <dron nombre="DronY">Bajar</dron nombre="DronY">
+          </acciones>
+          <acciones>
+            <dron nombre="DronZ">Esperar</dron nombre="DronZ">
+        </acciones>
+        </tiempo valor="6">
+        <tiempo valor="7">
+          <acciones>
+            <dron nombre="DronX">Esperar</dron nombre="DronX">
+          </acciones>
+          <acciones>
+            <dron nombre="DronY">Emitir luz</dron nombre="DronY">
+          </acciones>
+          <acciones>
+            <dron nombre="DronZ">Esperar</dron nombre="DronZ">
+          </acciones>
+        </tiempo valor="7">
+      </instrucciones>
+    </mensaje nombre="msg2">
+  </listaMensajes>
+</respuesta>

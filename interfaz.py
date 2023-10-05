@@ -80,10 +80,10 @@ class Pantalla_principal():
         analizarMenu = Menu(self.menubar, tearoff=0)
 
         analizarMenu .add_command(
-            label="Generar XML", command=self.ver_listado_de_drones, font=("Roboto Mono", 13))
+            label="Generar XML de salida", command=self.generar_archivo_salida, font=("Roboto Mono", 13))
 
         self.menubar.add_cascade(
-            label="Generar XML", menu=analizarMenu, font=("Roboto Mono", 13))
+            label="Generar XML salida", menu=analizarMenu, font=("Roboto Mono", 13))
 
         # === Opciones de gestion de drones ===
         archivoMenu = Menu(self.menubar, tearoff=0)
@@ -317,6 +317,8 @@ class Pantalla_principal():
             self.analizado = True
 
             # Solo despues de caragar un archivo se desigran los mensajes, y se crean la lista de instrucciones
+            self.drones_salidaM = lista_drones_salida()
+
             descifrar_mensaje_salida(
                 self.lista_mensajes, self.drones_salidaM, self.lista)
 
@@ -457,6 +459,34 @@ class Pantalla_principal():
             except:
                 messagebox.showerror(
                     "Error", "No se ha podido mostrar el listado de mensajes")
+                return
+
+        else:
+
+            messagebox.showerror(
+                "Error", "No se ha cargado ningun archivo")
+            return
+
+    def generar_archivo_salida(self):
+
+        if self.analizado == True:
+
+            try:
+
+                # El usuario selecciona donde guardar la grafica
+                direccion_salida = filedialog.asksaveasfilename(defaultextension=".xml",
+                                                                filetypes=[
+                                                                    ("Archivos de texto", "*.xml"), ("Todos los archivos", "*.*")],
+                                                                title="Guardar archivo como", initialfile="Salida")
+
+                self.drones_salidaM.generar_xml_salida(direccion_salida)
+
+                messagebox.showinfo(
+                    "Archvio de salida", "Archivo xml de salida generado con exito")
+
+            except:
+                messagebox.showerror(
+                    "Error", "No se ha podido generar el archivo de salida")
                 return
 
         else:
