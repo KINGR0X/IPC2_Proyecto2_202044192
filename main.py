@@ -411,7 +411,7 @@ def Crear_instrucciones_mensaje(mensaje_seleccionado, lista_sistema_drones, list
         lista_tiempo_temporal = lista_tiempo()
         nuevaInstruccionParaDron = False
         actual2 = sistema_drones_seleccionado.lista_contenido.primero
-        while actual2 != None:
+        while actual != None:
 
             # Se verifica si el dron de la lista de instrucciones es igual al dron de la lista de contenido
             if actual.instruccion.dron == actual2.contenido.dron.nombre:
@@ -429,8 +429,10 @@ def Crear_instrucciones_mensaje(mensaje_seleccionado, lista_sistema_drones, list
                 if nuevaInstruccionParaDron == True:
 
                     # === Se verifica si ya anteriormente se recorrio un dron con el mismo nombre, para ver si debe de subir o bajar. Para ello se vuelve a reccorrer la lista de drones ===
+
+                    # === actual 4 va una instruccion antes que actual ===
                     actual4 = lista_instrucciones_select.primero
-                    while actual4 != None:
+                    while actual != None:
 
                         if (actual.instruccion.dron == actual4.instruccion.dron) and (actual.instruccion.altura != actual4.instruccion.altura):
                             # print("Dron: ", actual.instruccion.dron)
@@ -439,19 +441,27 @@ def Crear_instrucciones_mensaje(mensaje_seleccionado, lista_sistema_drones, list
                             # === Se agregan los nuevos nodos ===
                             actual5 = lista_contenidoM.primero
                             while actual5 != None:
+
+                                # se agrega al dron que recibe los nuevos nodos
                                 if actual5.contenido_m.dron == actual.instruccion.dron:
+
                                     contador_celdas = actual5.contenido_m.lista_tiempo.contador_celdas
+
+                                    print(
+                                        "actual", actual.instruccion.altura)
+                                    print(
+                                        "actual4", actual4.instruccion.altura)
 
                                     # === Se verifica si debe de subir o bajar el dron ===
                                     if actual.instruccion.altura > actual4.instruccion.altura:
                                         # se recupera la lista y se le debe de agregar los nuevos movimientos
                                         lista_contenidoM
 
-                                        cantidadBajar = int(
-                                            actual4.instruccion.altura) - int(actual.instruccion.altura)
-
+                                        cantidadSubir = abs(int(
+                                            actual4.instruccion.altura) - int(actual.instruccion.altura))
+                                        print("Cantidad subir", cantidadSubir)
                                         # se crea un ciclo para ver cuantos nodos de bajar se deben de crear
-                                        for i in range(cantidadBajar):
+                                        for i in range(cantidadSubir):
                                             i += 1
                                             contador_tiempo += 1
                                             # se crea el valor del tiempo
@@ -468,13 +478,16 @@ def Crear_instrucciones_mensaje(mensaje_seleccionado, lista_sistema_drones, list
 
                                         actual5.contenido_m.lista_tiempo.insertar_dato(
                                             tiempo_temporal)
+
+                                        actual = actual.siguiente
+
                                     else:
 
                                         # se recupera la lista y se le debe de agregar los nuevos movimientos
                                         lista_contenidoM
 
-                                        cantidadBajar = int(
-                                            actual4.instruccion.altura) - int(actual.instruccion.altura)
+                                        cantidadBajar = abs(int(
+                                            actual4.instruccion.altura) - int(actual.instruccion.altura))
 
                                         # se crea un ciclo para ver cuantos nodos de bajar se deben de crear
                                         for i in range(cantidadBajar):
@@ -494,6 +507,8 @@ def Crear_instrucciones_mensaje(mensaje_seleccionado, lista_sistema_drones, list
 
                                         actual5.contenido_m.lista_tiempo.insertar_dato(
                                             tiempo_temporal)
+
+                                        actual = actual.siguiente
                                     break
                                 actual5 = actual5.siguiente
 
@@ -559,7 +574,11 @@ def Crear_instrucciones_mensaje(mensaje_seleccionado, lista_sistema_drones, list
 
         contador_tiempo = 0
 
-        actual = actual.siguiente
+        if actual!= None:
+            actual = actual.siguiente
+        else:
+            break
+        # print(actual.instruccion.altura)
 
 
 # === Encontrar tiempo optimo de la lista de lista_contenido_m y rellenar espacios con ESPERAR===
