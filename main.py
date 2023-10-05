@@ -41,6 +41,8 @@ def cargar_archivo(lista_dron, lista_sistemas, lista_mensajes):
     lista_sistema_temporal = lista_sistema_drones()
     lista_mensajes_temporal = lista_mensaje()
 
+    # antes de agregar el sistema de drones a la lista se debe de verificar si no es repetido
+
     # === Guardar lista de drones ===
     for drones in raiz.findall('listaDrones'):
 
@@ -49,7 +51,29 @@ def cargar_archivo(lista_dron, lista_sistemas, lista_mensajes):
 
             nuevo = dron(str(nuevo_dron))
 
-            lista_dron.insertar_dato_ordenado(nuevo)
+            # antes de agregar el sistema se verifica si ya anteriormente se agrego un sistema con el mismo nombre
+            if lista_dron.primero != None:
+                ultimoNodo = False
+                sistemaEncontrado = False
+                actual = lista_dron.primero
+                while actual != None:
+
+                    # Solo si luego de buscar en toda la lista NO encuentra el nuevo_dron, se agrega a la lista
+
+                    if actual.siguiente == None:
+                        ultimoNodo = True
+
+                    if nuevo_dron == actual.dron.nombre:
+                        sistemaEncontrado = True
+
+                    if sistemaEncontrado == False and ultimoNodo == True:
+                        # Se agregan las listas a la lista de sistema_drones
+                        lista_dron.insertar_dato_ordenado(nuevo)
+
+                    actual = actual.siguiente
+            else:
+                # Se agregan las listas a la lista de sistema_drones
+                lista_dron.insertar_dato_ordenado(nuevo)
 
     # === Guardar lista mensajes ===
     for lmensaje in raiz.findall('listaMensajes'):
@@ -79,7 +103,27 @@ def cargar_archivo(lista_dron, lista_sistemas, lista_mensajes):
                     nuevo_mensaje = mensaje(
                         str(nuevomensaje), str(mensaje_sistemaD),  lista_instrucciones_temporal)
 
-            lista_mensajes.insertar_dato_ordenado(nuevo_mensaje)
+            # antes de agregar el sistema se verifica si ya anteriormente se agrego un mensaje con el mismo nombre
+            if lista_mensajes.primero != None:
+                ultimoNodo = False
+                sistemaEncontrado = False
+                actual = lista_mensajes.primero
+                while actual != None:
+
+                    # Solo si luego de buscar en toda la lista NO encuentra el nombre_SistemaDron, se agrega a la lista
+
+                    if actual.siguiente == None:
+                        ultimoNodo = True
+
+                    if nuevomensaje == actual.mensaje.nombre:
+                        sistemaEncontrado = True
+
+                    if sistemaEncontrado == False and ultimoNodo == True:
+                        lista_mensajes.insertar_dato_ordenado(nuevo_mensaje)
+
+                    actual = actual.siguiente
+            else:
+                lista_mensajes.insertar_dato_ordenado(nuevo_mensaje)
 
         # === Lectura del Xml en cascada desde listaSistemasDrones ===
 
@@ -124,9 +168,30 @@ def cargar_archivo(lista_dron, lista_sistemas, lista_mensajes):
                             lista_contenido_temporal.insertar_dato(
                                 contenido(nombre_dron, lista_altura_temporal))
 
-                        # Se agregan las listas a la lista de sistema_drones
-                lista_sistemas.insertar_dato(sistema_drones(
-                    nombre_SistemaDron, altura_maxima, cantidad_drones, lista_contenido_temporal))
+                # antes de agregar el sistema se verifica si ya anteriormente se agrego un sistema con el mismo nombre
+                if lista_sistemas.primero != None:
+                    ultimoNodo = False
+                    sistemaEncontrado = False
+                    actual = lista_sistemas.primero
+                    while actual != None:
+
+                        # Solo si luego de buscar en toda la lista NO encuentra el nombre_SistemaDron, se agrega a la lista
+
+                        if actual.siguiente == None:
+                            ultimoNodo = True
+
+                        if nombre_SistemaDron == actual.sistema_drones.nombre:
+                            sistemaEncontrado = True
+
+                        if sistemaEncontrado == False and ultimoNodo == True:
+                            lista_sistemas.insertar_dato(sistema_drones(
+                                nombre_SistemaDron, altura_maxima, cantidad_drones, lista_contenido_temporal))
+
+                        actual = actual.siguiente
+                else:
+                    # # Se agregan las listas a la lista de sistema_drones
+                    lista_sistemas.insertar_dato(sistema_drones(
+                        nombre_SistemaDron, altura_maxima, cantidad_drones, lista_contenido_temporal))
 
     # lista_sistema_temporal.recorrer_e_imprimir_lista()
     # return lista_sistema_temporal, lista_drones_temporal

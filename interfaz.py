@@ -314,6 +314,7 @@ class Pantalla_principal():
 
         try:
             cargar_archivo(self.lista_drones, self.lista, self.lista_mensajes)
+
             self.analizado = True
 
             # Solo despues de caragar un archivo se desigran los mensajes, y se crean la lista de instrucciones
