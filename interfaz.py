@@ -302,7 +302,7 @@ class Pantalla_principal():
 
             except:
                 messagebox.showerror(
-                    "Error", "No se ha seleccionado ningún archivo")
+                    "Error", "No se ha podido generar la grafica de instrucciones")
                 return
 
         else:

@@ -578,8 +578,6 @@ def encontrar_tiempo_optimo(lista_contenidoM):
 
         if contador_actual > tiempo_optimo:
             tiempo_optimo = contador_actual
-        else:
-            tiempo_optimo = contador_anterior
 
         contador_anterior = actual.contenido_m.lista_tiempo.contador_celdas
 
